@@ -1,0 +1,80 @@
+# CMake generation dependency list for this directory.
+C:/Program Files/CMake/share/cmake-4.4/Modules/CMakeCInformation.cmake
+C:/Program Files/CMake/share/cmake-4.4/Modules/CMakeCXXInformation.cmake
+C:/Program Files/CMake/share/cmake-4.4/Modules/CMakeCommonLanguageInclude.cmake
+C:/Program Files/CMake/share/cmake-4.4/Modules/CMakeDependentOption.cmake
+C:/Program Files/CMake/share/cmake-4.4/Modules/CMakeFindDependencyMacro.cmake
+C:/Program Files/CMake/share/cmake-4.4/Modules/CMakeGenericSystem.cmake
+C:/Program Files/CMake/share/cmake-4.4/Modules/CMakeInitializeConfigs.cmake
+C:/Program Files/CMake/share/cmake-4.4/Modules/CMakeLanguageInformation.cmake
+C:/Program Files/CMake/share/cmake-4.4/Modules/CMakePushCheckState.cmake
+C:/Program Files/CMake/share/cmake-4.4/Modules/CMakeRCInformation.cmake
+C:/Program Files/CMake/share/cmake-4.4/Modules/CMakeSystemSpecificInformation.cmake
+C:/Program Files/CMake/share/cmake-4.4/Modules/CMakeSystemSpecificInitialize.cmake
+C:/Program Files/CMake/share/cmake-4.4/Modules/CheckCSourceCompiles.cmake
+C:/Program Files/CMake/share/cmake-4.4/Modules/CheckCXXSourceRuns.cmake
+C:/Program Files/CMake/share/cmake-4.4/Modules/CheckIncludeFile.cmake
+C:/Program Files/CMake/share/cmake-4.4/Modules/CheckIncludeFileCXX.cmake
+C:/Program Files/CMake/share/cmake-4.4/Modules/CheckLibraryExists.cmake
+C:/Program Files/CMake/share/cmake-4.4/Modules/Compiler/CMakeCommonCompilerMacros.cmake
+C:/Program Files/CMake/share/cmake-4.4/Modules/Compiler/MSVC-C.cmake
+C:/Program Files/CMake/share/cmake-4.4/Modules/Compiler/MSVC-CXX.cmake
+C:/Program Files/CMake/share/cmake-4.4/Modules/Compiler/MSVC.cmake
+C:/Program Files/CMake/share/cmake-4.4/Modules/FindOpenSSL.cmake
+C:/Program Files/CMake/share/cmake-4.4/Modules/FindPackageHandleStandardArgs.cmake
+C:/Program Files/CMake/share/cmake-4.4/Modules/FindPackageMessage.cmake
+C:/Program Files/CMake/share/cmake-4.4/Modules/FindThreads.cmake
+C:/Program Files/CMake/share/cmake-4.4/Modules/FindZLIB.cmake
+C:/Program Files/CMake/share/cmake-4.4/Modules/Internal/CMakeCLinkerInformation.cmake
+C:/Program Files/CMake/share/cmake-4.4/Modules/Internal/CMakeCXXLinkerInformation.cmake
+C:/Program Files/CMake/share/cmake-4.4/Modules/Internal/CMakeCommonLinkerInformation.cmake
+C:/Program Files/CMake/share/cmake-4.4/Modules/Internal/CheckCommon.cmake
+C:/Program Files/CMake/share/cmake-4.4/Modules/Internal/CheckSourceCompiles.cmake
+C:/Program Files/CMake/share/cmake-4.4/Modules/Internal/CheckSourceRuns.cmake
+C:/Program Files/CMake/share/cmake-4.4/Modules/Linker/MSVC-C.cmake
+C:/Program Files/CMake/share/cmake-4.4/Modules/Linker/MSVC-CXX.cmake
+C:/Program Files/CMake/share/cmake-4.4/Modules/Linker/MSVC.cmake
+C:/Program Files/CMake/share/cmake-4.4/Modules/Platform/Linker/Windows-MSVC-C.cmake
+C:/Program Files/CMake/share/cmake-4.4/Modules/Platform/Linker/Windows-MSVC-CXX.cmake
+C:/Program Files/CMake/share/cmake-4.4/Modules/Platform/Linker/Windows-MSVC.cmake
+C:/Program Files/CMake/share/cmake-4.4/Modules/Platform/Windows-Initialize.cmake
+C:/Program Files/CMake/share/cmake-4.4/Modules/Platform/Windows-MSVC-C.cmake
+C:/Program Files/CMake/share/cmake-4.4/Modules/Platform/Windows-MSVC-CXX.cmake
+C:/Program Files/CMake/share/cmake-4.4/Modules/Platform/Windows-MSVC.cmake
+C:/Program Files/CMake/share/cmake-4.4/Modules/Platform/Windows.cmake
+C:/Program Files/CMake/share/cmake-4.4/Modules/Platform/WindowsPaths.cmake
+C:/Program Files/CMake/share/cmake-4.4/Modules/SelectLibraryConfigurations.cmake
+C:/Users/Prithiv Rajan K/Downloads/vcpkg-master/vcpkg-master/installed/x64-windows/share/c-ares/c-ares-config-version.cmake
+C:/Users/Prithiv Rajan K/Downloads/vcpkg-master/vcpkg-master/installed/x64-windows/share/c-ares/c-ares-config.cmake
+C:/Users/Prithiv Rajan K/Downloads/vcpkg-master/vcpkg-master/installed/x64-windows/share/c-ares/c-ares-targets-debug.cmake
+C:/Users/Prithiv Rajan K/Downloads/vcpkg-master/vcpkg-master/installed/x64-windows/share/c-ares/c-ares-targets-release.cmake
+C:/Users/Prithiv Rajan K/Downloads/vcpkg-master/vcpkg-master/installed/x64-windows/share/c-ares/c-ares-targets.cmake
+C:/Users/Prithiv Rajan K/Downloads/vcpkg-master/vcpkg-master/installed/x64-windows/share/curl/CURLConfig.cmake
+C:/Users/Prithiv Rajan K/Downloads/vcpkg-master/vcpkg-master/installed/x64-windows/share/curl/CURLConfigVersion.cmake
+C:/Users/Prithiv Rajan K/Downloads/vcpkg-master/vcpkg-master/installed/x64-windows/share/curl/CURLTargets-debug.cmake
+C:/Users/Prithiv Rajan K/Downloads/vcpkg-master/vcpkg-master/installed/x64-windows/share/curl/CURLTargets-release.cmake
+C:/Users/Prithiv Rajan K/Downloads/vcpkg-master/vcpkg-master/installed/x64-windows/share/curl/CURLTargets.cmake
+C:/Users/Prithiv Rajan K/Downloads/vcpkg-master/vcpkg-master/installed/x64-windows/share/curl/vcpkg-cmake-wrapper.cmake
+C:/Users/Prithiv Rajan K/Downloads/vcpkg-master/vcpkg-master/installed/x64-windows/share/drogon/DrogonConfig.cmake
+C:/Users/Prithiv Rajan K/Downloads/vcpkg-master/vcpkg-master/installed/x64-windows/share/drogon/DrogonConfigVersion.cmake
+C:/Users/Prithiv Rajan K/Downloads/vcpkg-master/vcpkg-master/installed/x64-windows/share/drogon/DrogonTargets-debug.cmake
+C:/Users/Prithiv Rajan K/Downloads/vcpkg-master/vcpkg-master/installed/x64-windows/share/drogon/DrogonTargets-release.cmake
+C:/Users/Prithiv Rajan K/Downloads/vcpkg-master/vcpkg-master/installed/x64-windows/share/drogon/DrogonTargets.cmake
+C:/Users/Prithiv Rajan K/Downloads/vcpkg-master/vcpkg-master/installed/x64-windows/share/drogon/DrogonUtilities.cmake
+C:/Users/Prithiv Rajan K/Downloads/vcpkg-master/vcpkg-master/installed/x64-windows/share/drogon/FindBrotli.cmake
+C:/Users/Prithiv Rajan K/Downloads/vcpkg-master/vcpkg-master/installed/x64-windows/share/drogon/FindFilesystem.cmake
+C:/Users/Prithiv Rajan K/Downloads/vcpkg-master/vcpkg-master/installed/x64-windows/share/drogon/FindJsoncpp.cmake
+C:/Users/Prithiv Rajan K/Downloads/vcpkg-master/vcpkg-master/installed/x64-windows/share/drogon/ParseAndAddDrogonTests.cmake
+C:/Users/Prithiv Rajan K/Downloads/vcpkg-master/vcpkg-master/installed/x64-windows/share/openssl/vcpkg-cmake-wrapper.cmake
+C:/Users/Prithiv Rajan K/Downloads/vcpkg-master/vcpkg-master/installed/x64-windows/share/trantor/TrantorConfig.cmake
+C:/Users/Prithiv Rajan K/Downloads/vcpkg-master/vcpkg-master/installed/x64-windows/share/trantor/TrantorConfigVersion.cmake
+C:/Users/Prithiv Rajan K/Downloads/vcpkg-master/vcpkg-master/installed/x64-windows/share/trantor/TrantorTargets-debug.cmake
+C:/Users/Prithiv Rajan K/Downloads/vcpkg-master/vcpkg-master/installed/x64-windows/share/trantor/TrantorTargets-release.cmake
+C:/Users/Prithiv Rajan K/Downloads/vcpkg-master/vcpkg-master/installed/x64-windows/share/trantor/TrantorTargets.cmake
+C:/Users/Prithiv Rajan K/Downloads/vcpkg-master/vcpkg-master/installed/x64-windows/share/zlib/vcpkg-cmake-wrapper.cmake
+C:/Users/Prithiv Rajan K/Downloads/vcpkg-master/vcpkg-master/scripts/buildsystems/vcpkg.cmake
+C:/Users/Prithiv Rajan K/OneDrive/Desktop/Prithivmart/CMakeLists.txt
+C:/Users/Prithiv Rajan K/OneDrive/Desktop/Prithivmart/build/CMakeFiles/4.4.2/CMakeCCompiler.cmake
+C:/Users/Prithiv Rajan K/OneDrive/Desktop/Prithivmart/build/CMakeFiles/4.4.2/CMakeCXXCompiler.cmake
+C:/Users/Prithiv Rajan K/OneDrive/Desktop/Prithivmart/build/CMakeFiles/4.4.2/CMakeRCCompiler.cmake
+C:/Users/Prithiv Rajan K/OneDrive/Desktop/Prithivmart/build/CMakeFiles/4.4.2/CMakeSystem.cmake

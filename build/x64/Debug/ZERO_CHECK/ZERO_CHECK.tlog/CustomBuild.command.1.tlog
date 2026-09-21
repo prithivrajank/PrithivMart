@@ -1,0 +1,10 @@
+^C:\USERS\PRITHIV RAJAN K\ONEDRIVE\DESKTOP\PRITHIVMART\BUILD\CMAKEFILES\6EA7F6D6DA4285006DC2B9D93FD1D0BA\GENERATE.STAMP.RULE
+setlocal
+"C:\Program Files\CMake\bin\cmake.exe" "-SC:/Users/Prithiv Rajan K/OneDrive/Desktop/Prithivmart" "-BC:/Users/Prithiv Rajan K/OneDrive/Desktop/Prithivmart/build" --check-stamp-list CMakeFiles/generate.stamp.list --vs-solution-file "C:/Users/Prithiv Rajan K/OneDrive/Desktop/Prithivmart/build/PrithivMart.slnx"
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd

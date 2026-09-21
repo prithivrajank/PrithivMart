@@ -1,0 +1,1619 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PrithivMart</title>
+
+
+
+<style>
+:root{
+    --primary:#173b6c;
+    --primary-dark:#0f294d;
+    --accent:#f4b400;
+    --bg:#f5f7fa;
+    --surface:#ffffff;
+    --surface-soft:#f8fafc;
+    --text:#172033;
+    --muted:#667085;
+    --border:#dfe5ec;
+    --danger:#c62828;
+    --success:#1f7a4d;
+    --shadow:0 8px 24px rgba(16,24,40,.08);
+}
+
+*{
+    box-sizing:border-box;
+}
+
+body{
+    margin:0;
+    font-family:Arial, Helvetica, sans-serif;
+    background:var(--bg);
+    color:var(--text);
+}
+
+header{
+    min-height:68px;
+    padding:12px 5%;
+    background:var(--surface);
+    border-bottom:1px solid var(--border);
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:20px;
+    position:sticky;
+    top:0;
+    z-index:100;
+}
+
+header h2{
+    margin:0;
+    font-size:24px;
+    color:var(--primary);
+    letter-spacing:.2px;
+}
+
+nav{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    flex-wrap:wrap;
+}
+
+button{
+    border:1px solid transparent;
+    background:var(--primary);
+    color:white;
+    border-radius:8px;
+    padding:10px 16px;
+    cursor:pointer;
+    font-weight:600;
+    transition:.2s ease;
+}
+
+button:hover{
+    background:var(--primary-dark);
+    transform:translateY(-1px);
+}
+
+nav button{
+    background:transparent;
+    color:var(--primary);
+    border-color:var(--border);
+}
+
+nav button:hover{
+    background:#eef3f8;
+    transform:none;
+}
+
+.container{
+    width:min(1180px,92%);
+    margin:28px auto 50px;
+}
+
+.card{
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:14px;
+    padding:24px;
+    box-shadow:var(--shadow);
+}
+
+.auth-box{
+    width:min(470px,100%);
+    margin:48px auto;
+}
+
+.auth-box h2{
+    margin-top:0;
+    margin-bottom:8px;
+    color:var(--primary);
+}
+
+label{
+    display:block;
+    margin:14px 0 6px;
+    font-size:14px;
+    font-weight:700;
+}
+
+input,
+select,
+textarea{
+    width:100%;
+    border:1px solid #cfd7e3;
+    border-radius:8px;
+    padding:11px 12px;
+    font-size:15px;
+    background:white;
+    color:var(--text);
+    outline:none;
+    transition:.2s;
+}
+
+input:focus,
+select:focus,
+textarea:focus{
+    border-color:#7e9fc6;
+    box-shadow:0 0 0 3px rgba(23,59,108,.08);
+}
+
+textarea{
+    resize:vertical;
+    min-height:100px;
+}
+
+.auth-box > button{
+    width:100%;
+    margin-top:18px;
+}
+
+.small{
+    font-size:13px;
+    color:var(--muted);
+    line-height:1.5;
+}
+
+a{
+    color:var(--primary);
+    text-decoration:none;
+    font-weight:600;
+}
+
+a:hover{
+    text-decoration:underline;
+}
+
+.password-box{
+    display:flex;
+    align-items:stretch;
+    gap:8px;
+}
+
+.password-box input{
+    flex:1;
+}
+
+.password-box .show-password{
+    width:auto;
+    margin:0;
+    white-space:nowrap;
+    padding:0 14px;
+    background:var(--surface-soft);
+    color:var(--primary);
+    border:1px solid var(--border);
+}
+
+.password-box .show-password:hover{
+    background:#edf2f7;
+    transform:none;
+}
+
+.hero{
+    background:linear-gradient(120deg,#173b6c,#285c96);
+    color:white;
+    border-radius:16px;
+    padding:34px;
+    margin-bottom:24px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:30px;
+    overflow:hidden;
+}
+
+.hero h1{
+    margin:8px 0 10px;
+    font-size:34px;
+}
+
+.hero p{
+    margin:0;
+    color:#e7edf6;
+    max-width:650px;
+    line-height:1.6;
+}
+
+.hero .badge{
+    display:inline-block;
+    background:rgba(255,255,255,.14);
+    border:1px solid rgba(255,255,255,.2);
+    color:white;
+    padding:6px 10px;
+    border-radius:999px;
+    font-size:12px;
+    font-weight:700;
+}
+
+.hero-img{
+    width:150px;
+    height:150px;
+    border-radius:50%;
+    background:rgba(255,255,255,.08);
+    border:1px solid rgba(255,255,255,.12);
+    flex:none;
+}
+
+.products{
+    display:grid;
+    grid-template-columns:repeat(4,minmax(0,1fr));
+    gap:18px;
+}
+
+.product{
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:12px;
+    padding:14px;
+    transition:.2s ease;
+}
+
+.product:hover{
+    box-shadow:var(--shadow);
+    transform:translateY(-2px);
+}
+
+.product img{
+    width:100%;
+    height:190px;
+    object-fit:contain;
+    background:#f7f9fb;
+    border-radius:9px;
+    margin-bottom:12px;
+}
+
+.product h3{
+    margin:4px 0 8px;
+    font-size:17px;
+}
+
+.product p{
+    margin:6px 0;
+    line-height:1.45;
+}
+
+.product .price{
+    font-size:20px;
+    font-weight:800;
+    color:var(--primary);
+}
+
+.product .stock{
+    color:var(--success);
+    font-size:13px;
+    font-weight:700;
+}
+
+.product button{
+    width:100%;
+    margin-top:8px;
+}
+
+.row{
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:14px;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:10px;
+    overflow:hidden;
+}
+
+th,
+td{
+    padding:11px;
+    text-align:left;
+    border-bottom:1px solid var(--border);
+}
+
+th{
+    background:#f6f8fb;
+    color:#344054;
+    font-size:14px;
+}
+
+.message{
+    max-width:760px;
+    margin:0 auto 18px;
+    padding:12px 14px;
+    border:1px solid #b9cce2;
+    border-radius:9px;
+    background:#eef5fc;
+    color:#173b6c;
+    font-weight:600;
+}
+
+.password-rules{
+    margin-top:8px;
+    padding:10px 12px;
+    border-radius:8px;
+    background:#f8fafc;
+    border:1px solid var(--border);
+    font-size:13px;
+    line-height:1.6;
+}
+
+.good{
+    color:var(--success);
+}
+
+.bad{
+    color:var(--danger);
+}
+
+.actions{
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
+}
+
+.actions button{
+    width:auto;
+}
+
+.hidden{
+    display:none!important;
+}
+
+footer{
+    text-align:center;
+    padding:22px 12px;
+    color:var(--muted);
+    font-size:13px;
+}
+
+@media(max-width:900px){
+    .products{
+        grid-template-columns:repeat(2,minmax(0,1fr));
+    }
+
+    .hero-img{
+        width:110px;
+        height:110px;
+    }
+}
+
+@media(max-width:650px){
+    header{
+        padding:10px 4%;
+        align-items:flex-start;
+        flex-direction:column;
+    }
+
+    nav{
+        width:100%;
+    }
+
+    .container{
+        width:94%;
+        margin-top:18px;
+    }
+
+    .auth-box{
+        margin:26px auto;
+        padding:20px;
+    }
+
+    .row{
+        grid-template-columns:1fr;
+    }
+
+    .products{
+        grid-template-columns:1fr;
+    }
+
+    .hero{
+        padding:24px;
+    }
+
+    .hero h1{
+        font-size:27px;
+    }
+
+    .hero-img{
+        display:none;
+    }
+
+    .password-box{
+        gap:6px;
+    }
+}
+</style>
+
+
+
+</head>
+<body>
+
+<header>
+    <h2 onclick="showProducts()">PrithivMart</h2>
+
+    <nav id="guestNav">
+        <button onclick="showLogin()">Login</button>
+        <button onclick="showRegister()">Register</button>
+    </nav>
+
+    <nav id="buyerNav" class="hidden">
+        <button onclick="showProducts()">Products</button>
+        <button onclick="showCart()">Cart <span id="cartCount" class="badge">0</span></button>
+        <button onclick="showBuyerOrders()">Orders</button>
+        <button onclick="logout()">Logout</button>
+    </nav>
+
+    <nav id="sellerNav" class="hidden">
+        <button onclick="showSellerDashboard()">My Products</button>
+        <button onclick="showSellerOrders()">Orders</button>
+        <button onclick="logout()">Logout</button>
+    </nav>
+</header>
+
+<div class="container">
+
+    <div id="message"></div>
+
+    <!-- LOGIN -->
+    <section id="loginSection" class="card auth-box">
+        <h2>Login</h2>
+
+        <label>Email</label>
+        <input id="loginEmail" type="email" placeholder="Enter email">
+
+        <label>Password</label>
+        <div class="password-wrap">
+            <input id="loginPassword" type="password" placeholder="Enter password">
+            <button type="button" class="password-toggle" onclick="togglePassword('loginPassword', this)">Show</button>
+        </div>
+
+        <button onclick="login()">Login</button>
+<p class="small"><a href="#" onclick="showForgotPassword()">Forgot Password?</a></p>
+
+        <p class="small">
+            Don't have an account?
+            <a href="#" onclick="showRegister()">Register</a>
+        </p>
+    </section>
+
+
+    <!-- FORGOT PASSWORD -->
+    <section id="forgotSection" class="card auth-box hidden">
+        <h2>Forgot Password</h2>
+        <p class="small">Enter your registered email to receive a reset OTP.</p>
+
+        <label>Email</label>
+        <input id="forgotEmail" type="email" placeholder="Enter registered email">
+
+        <button onclick="sendResetOtp()">Send OTP</button>
+
+        <p class="small">
+            <a href="#" onclick="showLogin()">Back to Login</a>
+        </p>
+    </section>
+
+    <!-- RESET OTP -->
+    <section id="resetOtpSection" class="card auth-box hidden">
+        <h2>Verify Reset OTP</h2>
+
+        <label>Email</label>
+        <input id="resetOtpEmail" type="email" readonly>
+
+        <label>OTP</label>
+        <input id="resetOtpCode"
+               type="text"
+               inputmode="numeric"
+               maxlength="6"
+               placeholder="Enter 6-digit OTP">
+
+        <button onclick="verifyResetOtp()">Verify OTP</button>
+        <button onclick="sendResetOtp(true)">Resend OTP</button>
+    </section>
+
+    <!-- NEW PASSWORD -->
+    <section id="resetPasswordSection" class="card auth-box hidden">
+        <h2>Set New Password</h2>
+
+        <label>New Password</label>
+        <div class="password-box">
+            <input id="newPassword"
+                   type="password"
+                   placeholder="Enter new password">
+            <button type="button"
+                    class="show-password"
+                    onclick="togglePassword('newPassword', this)">
+                Show
+            </button>
+        </div>
+
+        <button onclick="resetPassword()">Change Password</button>
+    </section>
+
+    <!-- REGISTER -->
+    <section id="registerSection" class="card auth-box hidden">
+        <h2>Register</h2>
+
+        <label>Name</label>
+        <input id="regName" placeholder="Enter name">
+
+        <label>Email</label>
+        <input id="regEmail" type="email" placeholder="Enter Gmail address">
+
+        <label>Mobile Number</label>
+        <input id="regMobile" type="tel" maxlength="10" inputmode="numeric" placeholder="Enter 10-digit mobile number">
+
+        <label>Password</label>
+        <div class="password-wrap">
+            <input id="regPassword" type="password" placeholder="Enter password">
+            <button type="button" class="password-toggle" onclick="togglePassword('regPassword', this)">Show</button>
+        </div>
+
+        <label>Account Type</label>
+        <select id="regRole">
+            <option value="BUYER">Buyer</option>
+            <option value="SELLER">Seller</option>
+        </select>
+
+        <button onclick="register()">Register</button>
+
+        <p class="small">
+            Already registered?
+            <a href="#" onclick="showLogin()">Login</a>
+        </p>
+    </section>
+
+
+    <!-- OTP VERIFICATION -->
+    <section id="otpSection" class="card auth-box hidden">
+        <h2>Verify OTP</h2>
+        <p class="small">
+            A 6-digit OTP was sent to your email. Enter it below to activate your account.
+        </p>
+
+        <label>Email</label>
+        <input id="otpEmail" type="email" readonly>
+
+        <label>OTP</label>
+        <input id="otpCode"
+               type="text"
+               inputmode="numeric"
+               maxlength="6"
+               placeholder="Enter 6-digit OTP">
+
+        <button onclick="verifyOtp()">Verify OTP</button>
+        <button onclick="resendOtp()">Resend OTP</button>
+
+        <p class="small">
+            Already verified?
+            <a href="#" onclick="showLogin()">Login</a>
+        </p>
+    </section>
+
+    <!-- PRODUCTS -->
+    <section id="productsSection" class="hidden">
+        <div class="hero">
+            <div>
+                <span class="badge">PRITHIVMART MARKETPLACE</span>
+                <h1>Simple shopping, powered by a strong backend.</h1>
+                <p>Browse products added by sellers, search by category, add items to cart and place orders. The interface is intentionally clean so the project can focus on database and backend functionality.</p>
+            </div>
+            <div class="hero-img"></div>
+        </div>
+
+        <div class="toolbar">
+            <input id="productSearch" placeholder="Search products, category or seller..." oninput="filterProducts()">
+            <div class="chips">
+                <button class="chip active" onclick="setCategory('ALL',this)">All</button>
+                <button class="chip" onclick="setCategory('Electronics',this)">Electronics</button>
+                <button class="chip" onclick="setCategory('Accessories',this)">Accessories</button>
+                <button class="chip" onclick="setCategory('Other',this)">Other</button>
+            </div>
+        </div>
+
+        <div id="productsList" class="products"></div>
+    </section>
+
+    <!-- CART -->
+    <section id="cartSection" class="hidden">
+        <div class="card">
+            <h2>My Cart</h2>
+            <div id="cartList"></div>
+            <h3 id="cartTotal">Total: ₹0</h3>
+            <button onclick="placeOrder()">Place Order</button>
+        </div>
+    </section>
+
+    <!-- BUYER ORDERS -->
+    <section id="buyerOrdersSection" class="hidden">
+        <h2>My Orders</h2>
+        <div id="buyerOrders"></div>
+    </section>
+
+    <!-- SELLER DASHBOARD -->
+    <section id="sellerSection" class="hidden">
+
+        <div class="card">
+            <h2>Add Product</h2>
+
+            <div class="row">
+                <div>
+                    <label>Name</label>
+                    <input id="productName">
+                </div>
+
+                <div>
+                    <label>Category</label>
+                    <input id="productCategory">
+                </div>
+            </div>
+
+            <label>Description</label>
+            <textarea id="productDescription"></textarea>
+
+            <div class="row">
+                <div>
+                    <label>Price</label>
+                    <input id="productPrice" type="number" min="0">
+                </div>
+
+                <div>
+                    <label>Stock</label>
+                    <input id="productStock" type="number" min="0">
+                </div>
+            </div>
+
+            <label>Image URL</label>
+            <input id="productImage" placeholder="Paste product image URL (example: https://...)">
+
+            <button onclick="saveProduct()" id="productSaveButton">
+                Add Product
+            </button>
+
+            <button onclick="cancelEdit()" id="cancelEditButton" class="hidden">
+                Cancel Edit
+            </button>
+        </div>
+
+        <h2>My Products</h2>
+        <div id="sellerProducts"></div>
+
+    </section>
+
+    <!-- SELLER ORDERS -->
+    <section id="sellerOrdersSection" class="hidden">
+        <h2>Seller Orders</h2>
+        <div id="sellerOrders"></div>
+    </section>
+
+</div>
+
+<footer>© 2026 PrithivMart · Simple, secure and practical e-commerce</footer>
+
+<script>
+let currentUser = null;
+let editingProductId = null;
+let allProducts = [];
+let activeCategory = 'ALL';
+let pendingVerificationEmail = '';
+let pendingResetEmail = '';
+
+function togglePassword(id, button) {
+    const input = document.getElementById(id);
+    if (!input) return;
+    const showing = input.type === "text";
+    input.type = showing ? "password" : "text";
+    button.textContent = showing ? "Show" : "Hide";
+}
+
+function hideSections() {
+    [
+        "loginSection",
+        "forgotSection",
+        "resetOtpSection",
+        "resetPasswordSection",
+        "registerSection",
+        "otpSection",
+        "productsSection",
+        "cartSection",
+        "buyerOrdersSection",
+        "sellerSection",
+        "sellerOrdersSection"
+    ].forEach(id => {
+        document.getElementById(id).classList.add("hidden");
+    });
+}
+
+function showMessage(text) {
+    const box = document.getElementById("message");
+    box.innerHTML = `<div class="message">${escapeHtml(String(text))}</div>`;
+
+    setTimeout(() => {
+        box.innerHTML = "";
+    }, 3500);
+}
+
+function updateNav() {
+    document.getElementById("guestNav").classList.add("hidden");
+    document.getElementById("buyerNav").classList.add("hidden");
+    document.getElementById("sellerNav").classList.add("hidden");
+
+    if (!currentUser) {
+        document.getElementById("guestNav").classList.remove("hidden");
+        return;
+    }
+
+    if (currentUser.role === "BUYER") {
+        document.getElementById("buyerNav").classList.remove("hidden");
+    }
+
+    if (currentUser.role === "SELLER") {
+        document.getElementById("sellerNav").classList.remove("hidden");
+    }
+}
+
+async function api(url, options = {}) {
+    const config = {
+        method: options.method || "GET",
+        headers: options.headers || {},
+        credentials: "same-origin"
+    };
+
+    if (options.body !== undefined) {
+        config.headers["Content-Type"] = "application/json";
+        config.body = JSON.stringify(options.body);
+    }
+
+    const response = await fetch(url, config);
+
+    let data;
+
+    try {
+        data = await response.json();
+    } catch {
+        data = { status: "error", message: await response.text() };
+    }
+
+    if (!response.ok) {
+        throw new Error(data.message || "Request failed");
+    }
+
+    return data;
+}
+
+async function checkLogin() {
+    try {
+        currentUser = await api("/me");
+        updateNav();
+
+        if (currentUser.role === "BUYER") {
+            showProducts();
+        } else if (currentUser.role === "SELLER") {
+            showSellerDashboard();
+        }
+    } catch {
+        currentUser = null;
+        updateNav();
+        showLogin();
+    }
+}
+
+function showLogin() {
+    hideSections();
+    document.getElementById("loginSection").classList.remove("hidden");
+}
+
+function showRegister() {
+    hideSections();
+    document.getElementById("registerSection").classList.remove("hidden");
+}
+
+
+function showForgotPassword() {
+    hideSections();
+    document.getElementById("forgotEmail").value =
+        document.getElementById("loginEmail").value || "";
+    document.getElementById("forgotSection").classList.remove("hidden");
+}
+
+function showResetOtp(email) {
+    hideSections();
+    pendingResetEmail = email || pendingResetEmail;
+    document.getElementById("resetOtpEmail").value = pendingResetEmail;
+    document.getElementById("resetOtpCode").value = "";
+    document.getElementById("resetOtpSection").classList.remove("hidden");
+}
+
+function showResetPassword() {
+    hideSections();
+    document.getElementById("newPassword").value = "";
+    document.getElementById("resetPasswordSection").classList.remove("hidden");
+}
+
+async function sendResetOtp(isResend = false) {
+    const email = isResend
+        ? document.getElementById("resetOtpEmail").value.trim()
+        : document.getElementById("forgotEmail").value.trim();
+
+    if (!email) {
+        showMessage("Email is required");
+        return;
+    }
+
+    try {
+        const data = await api("/forgot-password", {
+            method: "POST",
+            body: { email }
+        });
+
+        if (data.status === "error") {
+            showMessage(data.message);
+            return;
+        }
+
+        pendingResetEmail = data.email || email;
+        showMessage(data.message || "Reset OTP sent");
+        showResetOtp(pendingResetEmail);
+    } catch (error) {
+        showMessage(error.message);
+    }
+}
+
+async function verifyResetOtp() {
+    const email =
+        document.getElementById("resetOtpEmail").value.trim() ||
+        pendingResetEmail;
+
+    const otp =
+        document.getElementById("resetOtpCode").value.trim();
+
+    if (!email || !/^[0-9]{6}$/.test(otp)) {
+        showMessage("Enter the 6-digit OTP");
+        return;
+    }
+
+    try {
+        const data = await api("/verify-reset-otp", {
+            method: "POST",
+            body: { email, otp }
+        });
+
+        if (data.status === "error") {
+            showMessage(data.message);
+            return;
+        }
+
+        showMessage(data.message || "OTP verified");
+        showResetPassword();
+    } catch (error) {
+        showMessage(error.message);
+    }
+}
+
+async function resetPassword() {
+    const email = pendingResetEmail;
+    const newPassword =
+        document.getElementById("newPassword").value;
+
+    if (
+        newPassword.length < 8 ||
+        !/[A-Z]/.test(newPassword) ||
+        !/[a-z]/.test(newPassword) ||
+        !/[0-9]/.test(newPassword) ||
+        !/[^A-Za-z0-9]/.test(newPassword)
+    ) {
+        showMessage(
+            "Password needs 8+ characters, uppercase, lowercase, number and symbol"
+        );
+        return;
+    }
+
+    try {
+        const data = await api("/reset-password", {
+            method: "POST",
+            body: {
+                email,
+                new_password: newPassword
+            }
+        });
+
+        if (data.status === "error") {
+            showMessage(data.message);
+            return;
+        }
+
+        showMessage(data.message || "Password changed successfully");
+        document.getElementById("loginEmail").value = email;
+        pendingResetEmail = "";
+        showLogin();
+    } catch (error) {
+        showMessage(error.message);
+    }
+}
+
+function showOtp(email) {
+    hideSections();
+    pendingVerificationEmail = email || pendingVerificationEmail;
+    document.getElementById("otpEmail").value = pendingVerificationEmail;
+    document.getElementById("otpCode").value = "";
+    document.getElementById("otpSection").classList.remove("hidden");
+}
+
+async function register() {
+    const name = document.getElementById("regName").value.trim();
+    const email = document.getElementById("regEmail").value.trim();
+    const mobile = document.getElementById("regMobile").value.trim();
+    const password = document.getElementById("regPassword").value;
+    const role = document.getElementById("regRole").value;
+
+    if (!name || !email || !mobile || !password) {
+        showMessage("All fields are required");
+        return;
+    }
+
+    if (!/^[A-Za-z0-9._%+-]+@gmail\.com$/i.test(email)) {
+        showMessage("Enter a valid Gmail address");
+        return;
+    }
+
+    if (!/^[6-9][0-9]{9}$/.test(mobile)) {
+        showMessage("Enter a valid 10-digit Indian mobile number");
+        return;
+    }
+
+    if (
+        password.length < 8 ||
+        !/[A-Z]/.test(password) ||
+        !/[a-z]/.test(password) ||
+        !/[0-9]/.test(password) ||
+        !/[^A-Za-z0-9]/.test(password)
+    ) {
+        showMessage("Password needs 8+ characters, uppercase, lowercase, number and symbol");
+        return;
+    }
+
+    try {
+        const data = await api("/register", {
+            method: "POST",
+            body: { name, email, mobile, password, role }
+        });
+
+        if (data.status === "error") {
+            showMessage(data.message);
+            return;
+        }
+
+        if (data.verification_required) {
+            pendingVerificationEmail = data.email || email;
+            showMessage(data.message || "OTP sent. Verify your account.");
+            showOtp(pendingVerificationEmail);
+            return;
+        }
+
+        showMessage(data.message || "Registration successful");
+        document.getElementById("loginEmail").value = email;
+        showLogin();
+    } catch (error) {
+        showMessage(error.message);
+    }
+}
+
+async function verifyOtp() {
+    const email =
+        document.getElementById("otpEmail").value.trim() ||
+        pendingVerificationEmail;
+
+    const otp = document.getElementById("otpCode").value.trim();
+
+    if (!email || !/^[0-9]{6}$/.test(otp)) {
+        showMessage("Enter the 6-digit OTP");
+        return;
+    }
+
+    try {
+        const data = await api("/verify-otp", {
+            method: "POST",
+            body: { email, otp }
+        });
+
+        if (data.status === "error") {
+            showMessage(data.message);
+            return;
+        }
+
+        showMessage(data.message || "Account verified successfully");
+        document.getElementById("loginEmail").value = email;
+        pendingVerificationEmail = "";
+        showLogin();
+    } catch (error) {
+        showMessage(error.message);
+    }
+}
+
+async function resendOtp() {
+    const email =
+        document.getElementById("otpEmail").value.trim() ||
+        pendingVerificationEmail;
+
+    if (!email) {
+        showMessage("Email is required");
+        return;
+    }
+
+    try {
+        const data = await api("/resend-otp", {
+            method: "POST",
+            body: { email }
+        });
+
+        showMessage(data.message || "A new OTP was sent");
+    } catch (error) {
+        showMessage(error.message);
+    }
+}
+
+async function login() {
+    const email = document.getElementById("loginEmail").value.trim();
+    const password = document.getElementById("loginPassword").value;
+
+    if (!email || !password) {
+        showMessage("Enter email and password");
+        return;
+    }
+
+    try {
+        const data = await api("/login", {
+            method: "POST",
+            body: { email, password }
+        });
+
+        currentUser = data;
+        updateNav();
+
+        showMessage("Login successful");
+
+        if (data.role === "BUYER") {
+            showProducts();
+        } else if (data.role === "SELLER") {
+            showSellerDashboard();
+        }
+    } catch (error) {
+        showMessage(error.message);
+    }
+}
+
+async function logout() {
+    try {
+        await api("/logout", { method: "POST" });
+    } catch {}
+
+    currentUser = null;
+    updateNav();
+    showLogin();
+    showMessage("Logged out");
+}
+
+async function showProducts() {
+    if (!currentUser) {
+        showMessage("Please login to view products");
+        showLogin();
+        return;
+    }
+
+    hideSections();
+    document.getElementById("productsSection").classList.remove("hidden");
+
+    try {
+        allProducts = await api("/products");
+        filterProducts();
+        updateCartCount();
+    } catch (error) {
+        showMessage(error.message);
+    }
+}
+
+function setCategory(category, button) {
+    activeCategory = category;
+    document.querySelectorAll(".chip").forEach(x => x.classList.remove("active"));
+    if (button) button.classList.add("active");
+    filterProducts();
+}
+
+function filterProducts() {
+    const q = (document.getElementById("productSearch")?.value || "").trim().toLowerCase();
+
+    const filtered = allProducts.filter(product => {
+        const name = String(product.name || "").toLowerCase();
+        const category = String(product.category || "").toLowerCase();
+        const seller = String(product.seller || "").toLowerCase();
+
+        const searchMatch = name.includes(q) || category.includes(q) || seller.includes(q);
+
+        const categoryMatch =
+            activeCategory === "ALL" ||
+            category === activeCategory.toLowerCase() ||
+            (activeCategory === "Other" && !["electronics","accessories"].includes(category));
+
+        return searchMatch && categoryMatch;
+    });
+
+    renderProducts(filtered);
+}
+
+function renderProducts(products) {
+    const list = document.getElementById("productsList");
+
+    if (!products.length) {
+        list.innerHTML = '<div class="empty">No products found.</div>';
+        return;
+    }
+
+    list.innerHTML = products.map(product => `
+        <div class="product">
+            <img class="product-image"
+                 src="${escapeHtml(product.image_url || 'https://placehold.co/500x350?text=Product')}"
+                 alt="${escapeHtml(product.name)}"
+                 onerror="this.src='https://placehold.co/500x350?text=Product'">
+
+            <h3>${escapeHtml(product.name)}</h3>
+            <p class="small">${escapeHtml(product.description || "")}</p>
+            <p><span class="badge">${escapeHtml(product.category || "Other")}</span></p>
+            <p class="price">₹${Number(product.price).toFixed(2)}</p>
+            <p class="stock">${product.stock > 0 ? `In Stock: ${product.stock}` : "Out of Stock"}</p>
+            <p class="seller">Seller: ${escapeHtml(product.seller || "-")}</p>
+
+            ${
+                currentUser && currentUser.role === "BUYER"
+                ? `
+                    <input type="number" min="1" max="${product.stock}" value="1"
+                           id="qty-${product.id}" ${product.stock <= 0 ? "disabled" : ""}>
+                    <button onclick="addToCart(${product.id}, ${product.stock})"
+                            ${product.stock <= 0 ? "disabled" : ""}>
+                        ${product.stock <= 0 ? "Out of Stock" : "Add to Cart"}
+                    </button>
+                  `
+                : ""
+            }
+        </div>
+    `).join("");
+}
+
+async function updateCartCount() {
+    if (!currentUser || currentUser.role !== "BUYER") return;
+
+    try {
+        const data = await api("/cart");
+        const count = (data.items || []).reduce((sum, item) => sum + Number(item.quantity || 0), 0);
+        const badge = document.getElementById("cartCount");
+        if (badge) badge.textContent = count;
+    } catch {}
+}
+
+async function addToCart(productId, stock) {
+    const qty = Number(
+        document.getElementById(`qty-${productId}`).value
+    );
+
+    if (qty <= 0 || qty > stock) {
+        showMessage("Enter valid quantity");
+        return;
+    }
+
+    try {
+        const data = await api("/cart", {
+            method: "POST",
+            body: {
+                product_id: productId,
+                quantity: qty
+            }
+        });
+
+        showMessage(data.message || "Added to cart");
+        updateCartCount();
+    } catch (error) {
+        showMessage(error.message);
+    }
+}
+
+async function showCart() {
+    hideSections();
+    document.getElementById("cartSection").classList.remove("hidden");
+
+    try {
+        const data = await api("/cart");
+
+        const list = document.getElementById("cartList");
+        const items = data.items || [];
+
+        if (items.length === 0) {
+            list.innerHTML = "<p>Cart is empty.</p>";
+            document.getElementById("cartTotal").textContent = "Total: ₹0";
+            return;
+        }
+
+        list.innerHTML = `
+            <table>
+                <tr>
+                    <th>Product</th>
+                    <th>Price</th>
+                    <th>Qty</th>
+                    <th>Subtotal</th>
+                    <th>Action</th>
+                </tr>
+
+                ${items.map(item => `
+                    <tr>
+                        <td>${escapeHtml(item.name)}</td>
+                        <td>₹${Number(item.price).toFixed(2)}</td>
+
+                        <td>
+                            <input
+                                style="width:75px"
+                                type="number"
+                                min="1"
+                                max="${item.stock}"
+                                value="${item.quantity}"
+                                id="cartqty-${item.cart_id}"
+                            >
+                        </td>
+
+                        <td>₹${Number(item.subtotal).toFixed(2)}</td>
+
+                        <td class="actions">
+                            <button onclick="updateCart(${item.cart_id})">
+                                Update
+                            </button>
+
+                            <button onclick="removeCart(${item.cart_id})">
+                                Remove
+                            </button>
+                        </td>
+                    </tr>
+                `).join("")}
+            </table>
+        `;
+
+        document.getElementById("cartTotal").textContent =
+            `Total: ₹${Number(data.total || 0).toFixed(2)}`;
+
+    } catch (error) {
+        showMessage(error.message);
+    }
+}
+
+async function updateCart(cartId) {
+    const quantity = Number(
+        document.getElementById(`cartqty-${cartId}`).value
+    );
+
+    try {
+        const data = await api(`/cart/${cartId}`, {
+            method: "PUT",
+            body: { quantity }
+        });
+
+        showMessage(data.message);
+        showCart();
+    } catch (error) {
+        showMessage(error.message);
+    }
+}
+
+async function removeCart(cartId) {
+    if (!confirm("Remove this item?")) return;
+
+    try {
+        const data = await api(`/cart/${cartId}`, {
+            method: "DELETE"
+        });
+
+        showMessage(data.message);
+        showCart();
+    } catch (error) {
+        showMessage(error.message);
+    }
+}
+
+async function placeOrder() {
+    if (!confirm("Place this order?")) return;
+
+    try {
+        const data = await api("/orders", {
+            method: "POST"
+        });
+
+        showMessage(
+            `${data.message || "Order placed"} - Order #${data.order_id || ""}`
+        );
+
+        showBuyerOrders();
+    } catch (error) {
+        showMessage(error.message);
+    }
+}
+
+async function showBuyerOrders() {
+    hideSections();
+    document.getElementById("buyerOrdersSection").classList.remove("hidden");
+
+    try {
+        const orders = await api("/orders");
+        const box = document.getElementById("buyerOrders");
+
+        if (!Array.isArray(orders) || orders.length === 0) {
+            box.innerHTML = "<p>No orders yet.</p>";
+            return;
+        }
+
+        box.innerHTML = `
+            <table>
+                <tr>
+                    <th>Order ID</th>
+                    <th>Total</th>
+                    <th>Status</th>
+                    <th>Date</th>
+                </tr>
+
+                ${orders.map(order => `
+                    <tr>
+                        <td>${order.order_id}</td>
+                        <td>₹${Number(order.total).toFixed(2)}</td>
+                        <td>${escapeHtml(order.status)}</td>
+                        <td>${escapeHtml(order.created_at)}</td>
+                    </tr>
+                `).join("")}
+            </table>
+        `;
+    } catch (error) {
+        showMessage(error.message);
+    }
+}
+
+async function showSellerDashboard() {
+    hideSections();
+    document.getElementById("sellerSection").classList.remove("hidden");
+    await loadSellerProducts();
+}
+
+async function loadSellerProducts() {
+    try {
+        const products = await api("/seller/products");
+        const box = document.getElementById("sellerProducts");
+
+        if (!Array.isArray(products) || products.length === 0) {
+            box.innerHTML = "<p>No products added.</p>";
+            return;
+        }
+
+        box.innerHTML = `
+            <table>
+                <tr>
+                    <th>Name</th>
+                    <th>Category</th>
+                    <th>Price</th>
+                    <th>Stock</th>
+                    <th>Action</th>
+                </tr>
+
+                ${products.map(product => `
+                    <tr>
+                        <td>${escapeHtml(product.name)}</td>
+                        <td>${escapeHtml(product.category || "-")}</td>
+                        <td>₹${Number(product.price).toFixed(2)}</td>
+                        <td>${product.stock}</td>
+
+                        <td class="actions">
+                            <button onclick='editProduct(${JSON.stringify(product)})'>
+                                Edit
+                            </button>
+
+                            <button onclick="deleteProduct(${product.id})">
+                                Delete
+                            </button>
+                        </td>
+                    </tr>
+                `).join("")}
+            </table>
+        `;
+    } catch (error) {
+        showMessage(error.message);
+    }
+}
+
+async function saveProduct() {
+    const data = {
+        name: document.getElementById("productName").value.trim(),
+        description: document.getElementById("productDescription").value.trim(),
+        category: document.getElementById("productCategory").value.trim(),
+        price: Number(document.getElementById("productPrice").value),
+        stock: Number(document.getElementById("productStock").value),
+        image_url: document.getElementById("productImage").value.trim()
+    };
+
+    if (!data.name || data.price < 0 || data.stock < 0) {
+        showMessage("Enter valid product details");
+        return;
+    }
+
+    try {
+        let response;
+
+        if (editingProductId) {
+            response = await api(`/products/${editingProductId}`, {
+                method: "PUT",
+                body: data
+            });
+        } else {
+            response = await api("/products", {
+                method: "POST",
+                body: data
+            });
+        }
+
+        showMessage(response.message);
+        clearProductForm();
+        loadSellerProducts();
+    } catch (error) {
+        showMessage(error.message);
+    }
+}
+
+function editProduct(product) {
+    editingProductId = product.id;
+
+    document.getElementById("productName").value =
+        product.name || "";
+
+    document.getElementById("productDescription").value =
+        product.description || "";
+
+    document.getElementById("productCategory").value =
+        product.category || "";
+
+    document.getElementById("productPrice").value =
+        product.price;
+
+    document.getElementById("productStock").value =
+        product.stock;
+
+    document.getElementById("productImage").value =
+        product.image_url || "";
+
+    document.getElementById("productSaveButton").textContent =
+        "Update Product";
+
+    document.getElementById("cancelEditButton")
+        .classList.remove("hidden");
+
+    window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+function cancelEdit() {
+    clearProductForm();
+}
+
+function clearProductForm() {
+    editingProductId = null;
+
+    [
+        "productName",
+        "productDescription",
+        "productCategory",
+        "productPrice",
+        "productStock",
+        "productImage"
+    ].forEach(id => {
+        document.getElementById(id).value = "";
+    });
+
+    document.getElementById("productSaveButton").textContent =
+        "Add Product";
+
+    document.getElementById("cancelEditButton")
+        .classList.add("hidden");
+}
+
+async function deleteProduct(productId) {
+    if (!confirm("Delete this product?")) return;
+
+    try {
+        const data = await api(`/products/${productId}`, {
+            method: "DELETE"
+        });
+
+        showMessage(data.message);
+        loadSellerProducts();
+    } catch (error) {
+        showMessage(error.message);
+    }
+}
+
+async function showSellerOrders() {
+    hideSections();
+    document.getElementById("sellerOrdersSection").classList.remove("hidden");
+
+    try {
+        const orders = await api("/seller/orders");
+        const box = document.getElementById("sellerOrders");
+
+        if (!Array.isArray(orders) || orders.length === 0) {
+            box.innerHTML = "<p>No seller orders.</p>";
+            return;
+        }
+
+        box.innerHTML = `
+            <table>
+                <tr>
+                    <th>Order</th>
+                    <th>Buyer</th>
+                    <th>Product</th>
+                    <th>Qty</th>
+                    <th>Price</th>
+                    <th>Status</th>
+                    <th>Change Status</th>
+                </tr>
+
+                ${orders.map(order => `
+                    <tr>
+                        <td>${order.order_id}</td>
+                        <td>${escapeHtml(order.buyer)}</td>
+                        <td>${escapeHtml(order.product)}</td>
+                        <td>${order.quantity}</td>
+                        <td>₹${Number(order.price).toFixed(2)}</td>
+                        <td>${escapeHtml(order.status)}</td>
+
+                        <td>
+                            <select id="status-${order.order_id}">
+                                <option value="PROCESSING">PROCESSING</option>
+                                <option value="SHIPPED">SHIPPED</option>
+                                <option value="DELIVERED">DELIVERED</option>
+                            </select>
+
+                            <button onclick="updateOrderStatus(${order.order_id})">
+                                Update
+                            </button>
+                        </td>
+                    </tr>
+                `).join("")}
+            </table>
+        `;
+    } catch (error) {
+        showMessage(error.message);
+    }
+}
+
+async function updateOrderStatus(orderId) {
+    const status =
+        document.getElementById(`status-${orderId}`).value;
+
+    try {
+        const data = await api(`/orders/status/${orderId}`, {
+            method: "PUT",
+            body: { status }
+        });
+
+        showMessage(data.message);
+        showSellerOrders();
+    } catch (error) {
+        showMessage(error.message);
+    }
+}
+
+function escapeHtml(value) {
+    return String(value ?? "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+}
+
+checkLogin();
+</script>
+
+</body>
+</html>

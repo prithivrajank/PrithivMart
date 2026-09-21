@@ -1,0 +1,3 @@
+C:/Users/Prithiv Rajan K/OneDrive/Desktop/Prithivmart/build/CMakeFiles/PrithivMart.dir
+C:/Users/Prithiv Rajan K/OneDrive/Desktop/Prithivmart/build/CMakeFiles/ALL_BUILD.dir
+C:/Users/Prithiv Rajan K/OneDrive/Desktop/Prithivmart/build/CMakeFiles/ZERO_CHECK.dir

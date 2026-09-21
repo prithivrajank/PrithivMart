@@ -1,0 +1,10 @@
+^C:\USERS\PRITHIV RAJAN K\ONEDRIVE\DESKTOP\PRITHIVMART\CMAKELISTS.TXT
+setlocal
+"C:\Program Files\CMake\bin\cmake.exe" "-SC:/Users/Prithiv Rajan K/OneDrive/Desktop/Prithivmart" "-BC:/Users/Prithiv Rajan K/OneDrive/Desktop/Prithivmart/build" --check-stamp-file "C:/Users/Prithiv Rajan K/OneDrive/Desktop/Prithivmart/build/CMakeFiles/generate.stamp"
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
