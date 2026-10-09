@@ -1,4 +1,3 @@
-```dockerfile
 FROM ubuntu:24.04
 
 ENV DEBIAN_FRONTEND=noninteractive
@@ -33,4 +32,3 @@ ENV PORT=8080
 EXPOSE 8080
 
 CMD ["sh", "-c", "./build/PrithivMart"]
-```
