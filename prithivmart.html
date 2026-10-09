@@ -813,11 +813,11 @@ td,th{padding:13px}
 <section id="chatPanel" class="chat-panel hidden" aria-label="PrithivMart help chat">
   <div class="chat-header">
     <div class="chat-avatar">✦</div>
-    <div class="chat-heading"><strong>PrithivMart Help</strong><span>Quick answers · Online</span></div>
+    <div class="chat-heading"><strong>PrithivMart AI</strong><span>AI shopping assistant</span></div>
     <button class="chat-close" type="button" aria-label="Close chat" onclick="toggleChat(false)">✕</button>
   </div>
   <div id="chatMessages" class="chat-messages" aria-live="polite">
-    <div class="chat-bubble bot">Hi! 👋 Welcome to PrithivMart. I can help with shopping, cart, orders, account and seller products. What do you need?</div>
+    <div class="chat-bubble bot">Hi! 👋 I’m PrithivMart AI. Ask me in English or Tanglish about shopping, cart, orders, account/OTP, or seller products. I’ll be clear when I can’t verify live account details.</div>
   </div>
   <div class="chat-quick">
     <button type="button" onclick="chatQuick('How do I place an order?')">Place order</button>
@@ -827,7 +827,7 @@ td,th{padding:13px}
   </div>
   <div class="chat-compose">
     <input id="chatInput" type="text" maxlength="400" placeholder="Ask a question…" aria-label="Type your question">
-    <button type="button" onclick="sendChatMessage()">Send</button>
+    <button id="chatSendButton" type="button" onclick="sendChatMessage()">Send</button>
   </div>
   <div class="chat-note">Automated help · It cannot view private orders or make changes.</div>
 </section>
@@ -1820,7 +1820,9 @@ if (productImageUrlInput) productImageUrlInput.addEventListener("input", () => {
 });
 
 
-/* Lightweight client-side FAQ assistant */
+/* Server-backed AI shopping assistant */
+const chatHistory = [];
+
 function toggleChat(forceOpen) {
     const panel = document.getElementById("chatPanel");
     const launcher = document.getElementById("chatLauncher");
@@ -1829,42 +1831,76 @@ function toggleChat(forceOpen) {
     launcher.setAttribute("aria-expanded", String(shouldOpen));
     if (shouldOpen) document.getElementById("chatInput").focus();
 }
-function addChatBubble(text, who) {
+
+function addChatBubble(text, who, extraClass = "") {
     const list = document.getElementById("chatMessages");
     const bubble = document.createElement("div");
-    bubble.className = "chat-bubble " + who;
+    bubble.className = "chat-bubble " + who + (extraClass ? " " + extraClass : "");
     bubble.textContent = text;
     list.appendChild(bubble);
     list.scrollTop = list.scrollHeight;
+    return bubble;
 }
-function getChatReply(message) {
-    const q = message.toLowerCase();
-    if (/\b(hi|hello|hey|vanakkam)\b/.test(q)) return "Hi! 😊 Ask me about placing an order, your cart, orders, registration, or adding seller products.";
-    if (/seller|add product|upload|image|stock|price/.test(q)) return "Seller help:\n1. Log in with a Seller account.\n2. Open My Products.\n3. Fill in product name, category, description, price and stock.\n4. Choose a JPG, PNG or WebP photo (up to 5 MB) or paste an image URL.\n5. Select Add Product.\nIf saving fails, check the error message shown on the page.";
-    if (/track|order status|my order|orders/.test(q)) return "To view your orders, log in as a Buyer and select Orders. I can explain the steps, but I cannot access your private order status inside this chat.";
-    if (/place order|buy|checkout|purchase/.test(q)) return "To place an order:\n1. Log in as a Buyer.\n2. Open Products and add an item to your cart.\n3. Open Cart and review quantities and total.\n4. Select Place Order.\nPlease review the total before confirming.";
-    if (/cart|basket|quantity/.test(q)) return "Open Cart from the top menu to review items and totals. Add products from the Products page. If the cart looks wrong, refresh the page and check again.";
-    if (/register|sign.?up|otp|verification|login|password|account/.test(q)) return "For account help, use Register to create an account and complete email OTP verification. Existing users can use Login. For a forgotten password, select Forgot Password on the login form. Never share your password or OTP.";
-    if (/return|refund|cancel|delivery|shipping|payment/.test(q)) return "I don't have a verified store policy or live delivery/payment status to quote. Please check the order details on your account or contact the store administrator before making a decision.";
-    if (/contact|support|human|admin|help/.test(q)) return "I’m the built-in PrithivMart FAQ helper, not a live support agent. Please use the site's available account/order pages or contact the store administrator for issues needing account access.";
-    if (/product|search|category|browse/.test(q)) return "Open Products after logging in as a Buyer. Use the search box to search by product, category or seller, then use the category chips to narrow the list.";
-    return "I can help with Products, Cart, Orders, Account/OTP, and Seller product uploads. Try one of the quick buttons below, or ask about one of those topics.";
-}
-function sendChatMessage(message) {
+
+async function sendChatMessage(message) {
     const input = document.getElementById("chatInput");
+    const sendButton = document.getElementById("chatSendButton");
     const text = (typeof message === "string" ? message : input.value).trim();
-    if (!text) return;
+    if (!text || sendButton.disabled) return;
+    if (text.length > 1200) {
+        addChatBubble("Please keep your question under 1,200 characters.", "bot");
+        return;
+    }
+
     addChatBubble(text, "user");
     input.value = "";
-    addChatBubble(getChatReply(text), "bot");
+    sendButton.disabled = true;
+    input.disabled = true;
+    const thinking = addChatBubble("Thinking…", "bot", "chat-thinking");
+
+    try {
+        const response = await fetch("/chatbot/ask", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            credentials: "same-origin",
+            body: JSON.stringify({
+                message: text,
+                history: chatHistory.slice(-8)
+            })
+        });
+        const raw = await response.text();
+        let data = {};
+        try { data = raw ? JSON.parse(raw) : {}; }
+        catch { throw new Error("The assistant returned an unreadable response."); }
+
+        thinking.remove();
+        if (!response.ok || data.status === "error" || !data.answer) {
+            addChatBubble(data.message || "The AI assistant is temporarily unavailable. Please try again.", "bot");
+            return;
+        }
+
+        addChatBubble(data.answer, "bot");
+        chatHistory.push({ role: "user", text: text });
+        chatHistory.push({ role: "model", text: data.answer });
+        if (chatHistory.length > 12) chatHistory.splice(0, chatHistory.length - 12);
+    } catch (error) {
+        thinking.remove();
+        addChatBubble(error.message || "Could not reach the AI assistant. Please try again.", "bot");
+    } finally {
+        sendButton.disabled = false;
+        input.disabled = false;
+        input.focus();
+    }
 }
+
 function chatQuick(message) {
     if (document.getElementById("chatPanel").classList.contains("hidden")) toggleChat(true);
     sendChatMessage(message);
 }
+
 const chatInput = document.getElementById("chatInput");
 if (chatInput) chatInput.addEventListener("keydown", event => {
-    if (event.key === "Enter") {
+    if (event.key === "Enter" && !event.shiftKey) {
         event.preventDefault();
         sendChatMessage();
     }
