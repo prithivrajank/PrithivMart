@@ -462,6 +462,75 @@ input:disabled,button:disabled{opacity:.55;cursor:not-allowed;transform:none}
 @media(max-width:900px){.seller-product-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:650px){.seller-product-grid{grid-template-columns:1fr}.image-uploader{grid-template-columns:1fr}.image-preview{width:100%;height:180px}.toolbar>input{max-width:none;width:100%}.product img{height:220px}}
 
+
+/* PrithivMart visual refresh */
+:root{--primary:#234b86;--primary-dark:#173563;--accent:#f5b83d;--bg:#f4f7fc;--surface:#fff;--surface-soft:#f8faff;--text:#152238;--muted:#68778d;--border:#e1e8f2;--shadow:0 12px 34px rgba(24,48,86,.09)}
+body{font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:radial-gradient(ellipse at top left,#eaf1ff 0,transparent 42%),var(--bg);line-height:1.5}
+header{padding:14px max(4%,calc((100% - 1240px)/2));background:rgba(255,255,255,.92);backdrop-filter:blur(14px);box-shadow:0 4px 20px rgba(24,48,86,.05)}
+header h2{font-size:26px;font-weight:850;letter-spacing:-.8px;cursor:pointer}
+header h2:before{content:"P";display:inline-grid;place-items:center;width:34px;height:34px;margin-right:9px;border-radius:11px;background:linear-gradient(135deg,#234b86,#497ed0);color:white;font-size:19px;vertical-align:middle;box-shadow:0 5px 12px #234b862c}
+nav{gap:7px}
+nav button{border-radius:999px;padding:9px 15px;font-size:13px}
+nav button:hover{background:#edf3ff;color:var(--primary)}
+.container{width:min(1240px,92%);margin:32px auto 64px;min-height:58vh}
+.card{border-radius:20px;padding:28px;border-color:#e3eaf4;box-shadow:0 12px 34px rgba(24,48,86,.07)}
+.auth-box{max-width:480px;margin:42px auto}
+.auth-box h2{font-size:27px;letter-spacing:-.6px}
+label{color:#34445d}
+input,select,textarea{border-radius:11px;border-color:#d5deeb;padding:12px 14px}
+input:focus,select:focus,textarea:focus{border-color:#7198d8;box-shadow:0 0 0 4px rgba(55,105,185,.1)}
+button{border-radius:11px;padding:11px 17px;box-shadow:0 2px 5px rgba(19,46,84,.04)}
+button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid #91b8f7;outline-offset:2px}
+button:hover{box-shadow:0 7px 16px rgba(35,75,134,.14)}
+.hero{position:relative;background:linear-gradient(120deg,#142e54 0%,#234b86 58%,#4677bb 100%);border-radius:24px;padding:clamp(26px,5vw,52px);min-height:260px;box-shadow:0 18px 38px rgba(27,62,112,.18)}
+.hero:after{content:"";position:absolute;width:300px;height:300px;right:8%;top:-115px;border:1px solid #ffffff2b;border-radius:50%;box-shadow:0 0 0 32px #ffffff08,0 0 0 64px #ffffff06;pointer-events:none}
+.hero h1{font-size:clamp(29px,4vw,43px);max-width:720px;letter-spacing:-1.2px;line-height:1.13}
+.hero p{font-size:15px;max-width:690px}
+.hero .badge{letter-spacing:.7px}
+.hero-img{z-index:1;width:160px;height:160px;background:radial-gradient(circle at 35% 30%,#ffffff55,#ffffff08 68%);box-shadow:inset 0 0 35px #ffffff12}
+.toolbar{padding:14px;background:#ffffffc9;border:1px solid var(--border);border-radius:16px;box-shadow:0 7px 22px rgba(24,48,86,.04)}
+.toolbar>input{max-width:500px}
+.chip{font-size:13px;padding:9px 15px}
+.products{gap:20px}
+.product{padding:15px;border-radius:17px;box-shadow:0 6px 20px rgba(24,48,86,.035);display:flex;flex-direction:column}
+.product:hover{transform:translateY(-4px);border-color:#c8d8ef;box-shadow:0 16px 32px rgba(24,48,86,.1)}
+.product img{height:205px;background:linear-gradient(145deg,#f7f9fd,#edf2f9);padding:8px;border-radius:12px}
+.product h3{font-size:16px;letter-spacing:-.2px}
+.product .price{font-size:22px;letter-spacing:-.4px}
+.product button{margin-top:auto;margin-top:10px}
+.message{border-radius:12px;box-shadow:0 6px 18px rgba(24,48,86,.05)}
+.seller-product-card{border-radius:17px;padding:15px;box-shadow:0 6px 20px rgba(24,48,86,.04);transition:.2s ease}
+.seller-product-card:hover{transform:translateY(-3px);box-shadow:0 12px 26px rgba(24,48,86,.1)}
+.seller-product-card img{border-radius:12px}
+.image-uploader{border-radius:15px;background:#f8faff;border-color:#cad8ed}
+footer{border-top:1px solid var(--border);background:#ffffff80;padding:28px 12px}
+.hidden{display:none!important}
+#cartSection .card,#buyerOrdersSection,#sellerOrdersSection{overflow-x:auto}
+table{border-radius:13px}
+th{font-weight:750}
+td,th{padding:13px}
+@media(max-width:650px){header{align-items:stretch;gap:12px}header h2{font-size:23px}nav{gap:6px}nav button{padding:8px 11px;font-size:12px}.hero{border-radius:19px}.hero:after{right:-150px}.card{padding:20px}.toolbar{padding:10px}.products{gap:14px}.product img{height:220px}}
+/* Built-in FAQ helper: no external service or secret key required */
+.chat-launcher{position:fixed;right:22px;bottom:22px;z-index:1000;width:60px;height:60px;border:0;border-radius:50%;background:linear-gradient(135deg,#234b86,#477bd0);color:#fff;font-size:25px;box-shadow:0 12px 30px #234b8640;display:grid;place-items:center}
+.chat-launcher:hover{transform:translateY(-2px);background:linear-gradient(135deg,#173563,#315fa5)}
+.chat-panel{position:fixed;right:22px;bottom:94px;z-index:1000;width:min(370px,calc(100vw - 28px));height:min(520px,calc(100vh - 130px));background:#fff;border:1px solid #dce5f2;border-radius:20px;box-shadow:0 24px 70px #13294b35;display:flex;flex-direction:column;overflow:hidden}
+.chat-header{display:flex;align-items:center;gap:11px;padding:16px;background:linear-gradient(120deg,#173563,#315f9f);color:#fff}
+.chat-avatar{width:40px;height:40px;display:grid;place-items:center;border-radius:14px;background:#ffffff24;font-size:20px}
+.chat-heading{flex:1}.chat-heading strong{display:block;font-size:15px}.chat-heading span{font-size:12px;color:#dbe8fb}
+.chat-close{background:#ffffff18;border:1px solid #ffffff30;color:#fff;padding:7px 10px}
+.chat-messages{flex:1;overflow-y:auto;padding:15px;background:linear-gradient(#f7faff,#fff);display:flex;flex-direction:column;gap:10px}
+.chat-bubble{max-width:88%;padding:11px 13px;border-radius:15px;font-size:13px;line-height:1.5;white-space:pre-wrap;overflow-wrap:anywhere}
+.chat-bubble.bot{align-self:flex-start;background:#eef3fb;color:#22334c;border-bottom-left-radius:5px}
+.chat-bubble.user{align-self:flex-end;background:#234b86;color:#fff;border-bottom-right-radius:5px}
+.chat-quick{display:flex;gap:7px;flex-wrap:wrap;padding:0 13px 12px;background:#fff}
+.chat-quick button{font-size:12px;padding:7px 10px;border:1px solid #dce5f2;background:#fff;color:#234b86;border-radius:999px;box-shadow:none}
+.chat-quick button:hover{background:#edf3ff;transform:none}
+.chat-compose{display:flex;gap:8px;padding:12px;border-top:1px solid #e8edf5;background:#fff}
+.chat-compose input{min-width:0;font-size:13px;padding:10px 12px}
+.chat-compose button{padding:10px 13px}
+.chat-note{font-size:10px;color:#8591a3;padding:0 13px 10px;background:#fff}
+@media(max-width:480px){.chat-launcher{right:14px;bottom:14px}.chat-panel{right:10px;bottom:82px;width:calc(100vw - 20px);height:min(520px,calc(100vh - 105px))}}
+
 </style>
 
 
@@ -737,7 +806,32 @@ input:disabled,button:disabled{opacity:.55;cursor:not-allowed;transform:none}
 
 </div>
 
-<footer>© 2026 PrithivMart · Simple, secure and practical e-commerce</footer>
+<footer>© 2026 PrithivMart · Shopping made simpler, every day.</footer>
+
+<!-- PrithivMart help chat -->
+<button id="chatLauncher" class="chat-launcher" type="button" aria-label="Open PrithivMart help chat" aria-expanded="false" onclick="toggleChat()">✦</button>
+<section id="chatPanel" class="chat-panel hidden" aria-label="PrithivMart help chat">
+  <div class="chat-header">
+    <div class="chat-avatar">✦</div>
+    <div class="chat-heading"><strong>PrithivMart Help</strong><span>Quick answers · Online</span></div>
+    <button class="chat-close" type="button" aria-label="Close chat" onclick="toggleChat(false)">✕</button>
+  </div>
+  <div id="chatMessages" class="chat-messages" aria-live="polite">
+    <div class="chat-bubble bot">Hi! 👋 Welcome to PrithivMart. I can help with shopping, cart, orders, account and seller products. What do you need?</div>
+  </div>
+  <div class="chat-quick">
+    <button type="button" onclick="chatQuick('How do I place an order?')">Place order</button>
+    <button type="button" onclick="chatQuick('How do I track my order?')">My orders</button>
+    <button type="button" onclick="chatQuick('How do I add a product as a seller?')">Seller help</button>
+    <button type="button" onclick="chatQuick('I need login or registration help')">Account help</button>
+  </div>
+  <div class="chat-compose">
+    <input id="chatInput" type="text" maxlength="400" placeholder="Ask a question…" aria-label="Type your question">
+    <button type="button" onclick="sendChatMessage()">Send</button>
+  </div>
+  <div class="chat-note">Automated help · It cannot view private orders or make changes.</div>
+</section>
+
 
 <script>
 let currentUser = null;
@@ -1723,6 +1817,57 @@ if (productImageUrlInput) productImageUrlInput.addEventListener("input", () => {
     selectedProductImage = "";
     document.getElementById("productImageFile").value = "";
     setProductImagePreview(productImageUrlInput.value.trim());
+});
+
+
+/* Lightweight client-side FAQ assistant */
+function toggleChat(forceOpen) {
+    const panel = document.getElementById("chatPanel");
+    const launcher = document.getElementById("chatLauncher");
+    const shouldOpen = typeof forceOpen === "boolean" ? forceOpen : panel.classList.contains("hidden");
+    panel.classList.toggle("hidden", !shouldOpen);
+    launcher.setAttribute("aria-expanded", String(shouldOpen));
+    if (shouldOpen) document.getElementById("chatInput").focus();
+}
+function addChatBubble(text, who) {
+    const list = document.getElementById("chatMessages");
+    const bubble = document.createElement("div");
+    bubble.className = "chat-bubble " + who;
+    bubble.textContent = text;
+    list.appendChild(bubble);
+    list.scrollTop = list.scrollHeight;
+}
+function getChatReply(message) {
+    const q = message.toLowerCase();
+    if (/\b(hi|hello|hey|vanakkam)\b/.test(q)) return "Hi! 😊 Ask me about placing an order, your cart, orders, registration, or adding seller products.";
+    if (/seller|add product|upload|image|stock|price/.test(q)) return "Seller help:\n1. Log in with a Seller account.\n2. Open My Products.\n3. Fill in product name, category, description, price and stock.\n4. Choose a JPG, PNG or WebP photo (up to 5 MB) or paste an image URL.\n5. Select Add Product.\nIf saving fails, check the error message shown on the page.";
+    if (/track|order status|my order|orders/.test(q)) return "To view your orders, log in as a Buyer and select Orders. I can explain the steps, but I cannot access your private order status inside this chat.";
+    if (/place order|buy|checkout|purchase/.test(q)) return "To place an order:\n1. Log in as a Buyer.\n2. Open Products and add an item to your cart.\n3. Open Cart and review quantities and total.\n4. Select Place Order.\nPlease review the total before confirming.";
+    if (/cart|basket|quantity/.test(q)) return "Open Cart from the top menu to review items and totals. Add products from the Products page. If the cart looks wrong, refresh the page and check again.";
+    if (/register|sign.?up|otp|verification|login|password|account/.test(q)) return "For account help, use Register to create an account and complete email OTP verification. Existing users can use Login. For a forgotten password, select Forgot Password on the login form. Never share your password or OTP.";
+    if (/return|refund|cancel|delivery|shipping|payment/.test(q)) return "I don't have a verified store policy or live delivery/payment status to quote. Please check the order details on your account or contact the store administrator before making a decision.";
+    if (/contact|support|human|admin|help/.test(q)) return "I’m the built-in PrithivMart FAQ helper, not a live support agent. Please use the site's available account/order pages or contact the store administrator for issues needing account access.";
+    if (/product|search|category|browse/.test(q)) return "Open Products after logging in as a Buyer. Use the search box to search by product, category or seller, then use the category chips to narrow the list.";
+    return "I can help with Products, Cart, Orders, Account/OTP, and Seller product uploads. Try one of the quick buttons below, or ask about one of those topics.";
+}
+function sendChatMessage(message) {
+    const input = document.getElementById("chatInput");
+    const text = (typeof message === "string" ? message : input.value).trim();
+    if (!text) return;
+    addChatBubble(text, "user");
+    input.value = "";
+    addChatBubble(getChatReply(text), "bot");
+}
+function chatQuick(message) {
+    if (document.getElementById("chatPanel").classList.contains("hidden")) toggleChat(true);
+    sendChatMessage(message);
+}
+const chatInput = document.getElementById("chatInput");
+if (chatInput) chatInput.addEventListener("keydown", event => {
+    if (event.key === "Enter") {
+        event.preventDefault();
+        sendChatMessage();
+    }
 });
 
 checkLogin();
