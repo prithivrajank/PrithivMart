@@ -20,6 +20,12 @@ class Database
 private:
     static PGconn *connect()
     {
+        const char *databaseUrl = std::getenv("PRITHIVMART_DATABASE_URL");
+        if (databaseUrl && *databaseUrl)
+        {
+            return PQconnectdb(databaseUrl);
+        }
+
         const char *dbPassword = std::getenv("PRITHIVMART_DB_PASSWORD");
 
         if (!dbPassword)
@@ -2798,10 +2804,11 @@ int main()
     // ---------------------------------------------------------
     // SERVER
     // ---------------------------------------------------------
-    if (!std::getenv("PRITHIVMART_DB_PASSWORD"))
+    if (!std::getenv("PRITHIVMART_DATABASE_URL") &&
+        !std::getenv("PRITHIVMART_DB_PASSWORD"))
     {
-        std::cerr << "Warning: PRITHIVMART_DB_PASSWORD is not set. "
-                  << "Database routes will fail until it is set."
+        std::cerr << "Warning: Set PRITHIVMART_DATABASE_URL for cloud PostgreSQL "
+                  << "or PRITHIVMART_DB_PASSWORD for local PostgreSQL."
                   << std::endl;
     }
 
@@ -2813,10 +2820,22 @@ int main()
     app().setDocumentRoot(".");
     app().setHomePage("prithivmart.html");
 
-    app().addListener("127.0.0.1", 8080);
+    int port = 8080;
+    if (const char *portEnv = std::getenv("PORT"))
+    {
+        char *end = nullptr;
+        long parsedPort = std::strtol(portEnv, &end, 10);
+        if (end != portEnv && *end == '\\0' && parsedPort > 0 && parsedPort <= 65535)
+        {
+            port = static_cast<int>(parsedPort);
+        }
+    }
+
+    // Bind to all interfaces so cloud platforms can route traffic to the service.
+    app().addListener("0.0.0.0", port);
 
     std::cout
-        << "PrithivMart running at http://127.0.0.1:8080"
+        << "PrithivMart listening on 0.0.0.0:" << port
         << std::endl;
 
     app().run();
