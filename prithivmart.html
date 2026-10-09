@@ -1529,7 +1529,7 @@ async function saveProduct() {
         return;
     }
     if (data.image_url && !data.image_url.startsWith("data:image/") &&
-        !/^https?:\\/\\//i.test(data.image_url)) {
+        !/^https?:\/\//i.test(data.image_url)) {
         showMessage("Image URL must start with http:// or https://");
         return;
     }
