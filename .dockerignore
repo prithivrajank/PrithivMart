@@ -1,0 +1,8 @@
+.git
+.github
+build
+output
+*.exe
+*.obj
+*.pdb
+.vscode
