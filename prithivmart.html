@@ -1481,43 +1481,36 @@ async function loadSellerProducts() {
         const box = document.getElementById("sellerProducts");
 
         if (!Array.isArray(products) || products.length === 0) {
-            box.innerHTML = "<p>No products added.</p>";
+            box.innerHTML = '<div class="empty">No products added yet. Use the form above to add your first product.</div>';
+            window.sellerProductsCache = [];
             return;
         }
 
-        box.innerHTML = `
-            <table>
-                <tr>
-                    <th>Name</th>
-                    <th>Category</th>
-                    <th>Price</th>
-                    <th>Stock</th>
-                    <th>Action</th>
-                </tr>
-
-                ${products.map(product => `
-                    <tr>
-                        <td>${escapeHtml(product.name)}</td>
-                        <td>${escapeHtml(product.category || "-")}</td>
-                        <td>₹${Number(product.price).toFixed(2)}</td>
-                        <td>${product.stock}</td>
-
-                        <td class="actions">
-                            <button onclick='editProduct(${JSON.stringify(product)})'>
-                                Edit
-                            </button>
-
-                            <button onclick="deleteProduct(${product.id})">
-                                Delete
-                            </button>
-                        </td>
-                    </tr>
-                `).join("")}
-            </table>
-        `;
+        window.sellerProductsCache = products;
+        box.innerHTML = `<div class="seller-product-grid">
+            ${products.map(product => `
+                <article class="seller-product-card">
+                    <img src="${escapeHtml(product.image_url || fallbackProductImage)}"
+                         alt="${escapeHtml(product.name)}"
+                         onerror="this.onerror=null;this.src='https://placehold.co/500x350?text=Product'">
+                    <h3>${escapeHtml(product.name)}</h3>
+                    <p class="small">${escapeHtml(product.category || "Other")} · Stock: ${Number(product.stock) || 0}</p>
+                    <p class="price">₹${Number(product.price).toFixed(2)}</p>
+                    <div class="actions">
+                        <button onclick="editProductById(${Number(product.id)})">Edit</button>
+                        <button class="danger-button" onclick="deleteProduct(${Number(product.id)})">Delete</button>
+                    </div>
+                </article>
+            `).join("")}
+        </div>`;
     } catch (error) {
         showMessage(error.message);
     }
+}
+
+function editProductById(productId) {
+    const product = (window.sellerProductsCache || []).find(item => Number(item.id) === Number(productId));
+    if (product) editProduct(product);
 }
 
 async function saveProduct() {
