@@ -2821,7 +2821,6 @@ int main()
             latestTurn["role"] = "user";
             latestTurn["parts"][0]["text"] = message;
             requestBody["contents"].append(latestTurn);
-            requestBody["generationConfig"]["temperature"] = 0.25;
             requestBody["generationConfig"]["maxOutputTokens"] = 650;
 
             Json::StreamWriterBuilder writer;
@@ -2862,6 +2861,7 @@ int main()
 
             if (result != CURLE_OK)
             {
+                std::cerr << "Gemini network request failed: " << curl_easy_strerror(result) << std::endl;
                 callback(jsonError(
                     k502BadGateway,
                     "The AI assistant could not connect right now. Please try again."
@@ -2874,6 +2874,7 @@ int main()
             if (httpCode < 200 || httpCode >= 300 ||
                 !reader.parse(responseBody, providerResponse))
             {
+                std::cerr << "Gemini API returned HTTP " << httpCode << std::endl;
                 callback(jsonError(
                     k502BadGateway,
                     httpCode == 429
