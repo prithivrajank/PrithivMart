@@ -13,12 +13,12 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     uuid-dev \
     zlib1g-dev \
     libsqlite3-dev \
-    default-libmysqlclient-dev \
+    libsqlite3-dev \
+    libmariadb-dev \
+    libmariadb-dev-compat \
     libssl-dev \
     libbrotli-dev \
     ca-certificates \
-    && rm -rf /var/lib/apt/lists/*
-
 WORKDIR /app
 COPY . .
 
