@@ -2048,6 +2048,14 @@ HttpResponsePtr jsonError(
     return resp;
 }
 
+static size_t appendChatResponse(char *ptr, size_t size, size_t nmemb, void *userdata)
+{
+    auto *response = static_cast<std::string *>(userdata);
+    const size_t bytes = size * nmemb;
+    response->append(ptr, bytes);
+    return bytes;
+}
+
 // =============================================================
 // MAIN
 // =============================================================
@@ -2839,7 +2847,7 @@ int main()
             curl_easy_setopt(curl, CURLOPT_POST, 1L);
             curl_easy_setopt(curl, CURLOPT_POSTFIELDS, payload.c_str());
             curl_easy_setopt(curl, CURLOPT_POSTFIELDSIZE, static_cast<long>(payload.size()));
-            curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, Database::appendHttpResponse);
+            curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, appendChatResponse);
             curl_easy_setopt(curl, CURLOPT_WRITEDATA, &responseBody);
             curl_easy_setopt(curl, CURLOPT_CONNECTTIMEOUT, 8L);
             curl_easy_setopt(curl, CURLOPT_TIMEOUT, 30L);
