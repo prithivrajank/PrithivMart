@@ -11,6 +11,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libpq-dev \
     libjsoncpp-dev \
     uuid-dev \
+    zlib1g-dev \
     ca-certificates \
     && rm -rf /var/lib/apt/lists/*
 
