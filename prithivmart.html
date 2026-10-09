@@ -674,7 +674,7 @@ input:disabled,button:disabled{opacity:.55;cursor:not-allowed;transform:none}
     <section id="sellerSection" class="hidden">
 
         <div class="card">
-            <h2>Add Product</h2>
+            <div class="seller-form-title"><h2 id="productFormTitle">Add Product</h2><span class="small">Add clear photos to help buyers choose</span></div>
 
             <div class="row">
                 <div>
@@ -703,8 +703,17 @@ input:disabled,button:disabled{opacity:.55;cursor:not-allowed;transform:none}
                 </div>
             </div>
 
-            <label>Image URL</label>
-            <input id="productImage" placeholder="Paste product image URL (example: https://...)">
+            <label>Product Image</label>
+            <div class="image-uploader">
+                <img id="productImagePreview" class="image-preview" src="https://placehold.co/300x260?text=Product+Photo" alt="Product image preview">
+                <div class="image-tools">
+                    <input id="productImageFile" type="file" accept="image/jpeg,image/png,image/webp">
+                    <span class="image-help">Choose JPG, PNG or WebP (max 5 MB). The image is resized before saving.</span>
+                    <label for="productImage">Or paste an image URL</label>
+                    <input id="productImage" type="url" placeholder="https://example.com/product.jpg">
+                    <button type="button" class="password-toggle" onclick="clearProductImage()">Remove image</button>
+                </div>
+            </div>
 
             <button onclick="saveProduct()" id="productSaveButton">
                 Add Product
@@ -737,6 +746,58 @@ let allProducts = [];
 let activeCategory = 'ALL';
 let pendingVerificationEmail = '';
 let pendingResetEmail = '';
+let selectedProductImage = "";
+const fallbackProductImage = "https://placehold.co/500x350?text=Product";
+
+function setProductImagePreview(src) {
+    const preview = document.getElementById("productImagePreview");
+    if (preview) preview.src = src || fallbackProductImage;
+}
+
+function clearProductImage() {
+    selectedProductImage = "";
+    document.getElementById("productImageFile").value = "";
+    document.getElementById("productImage").value = "";
+    setProductImagePreview("");
+}
+
+function handleProductImageFile(event) {
+    const file = event.target.files && event.target.files[0];
+    if (!file) return;
+    if (!["image/jpeg", "image/png", "image/webp"].includes(file.type)) {
+        showMessage("Choose a JPG, PNG or WebP image");
+        event.target.value = "";
+        return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+        showMessage("Image must be 5 MB or smaller");
+        event.target.value = "";
+        return;
+    }
+    const reader = new FileReader();
+    reader.onerror = () => showMessage("Could not read this image");
+    reader.onload = () => {
+        const image = new Image();
+        image.onerror = () => showMessage("This image could not be opened");
+        image.onload = () => {
+            const scale = Math.min(1, 800 / Math.max(image.width, image.height));
+            const canvas = document.createElement("canvas");
+            canvas.width = Math.max(1, Math.round(image.width * scale));
+            canvas.height = Math.max(1, Math.round(image.height * scale));
+            const ctx = canvas.getContext("2d");
+            if (!ctx) {
+                showMessage("Image processing is not supported in this browser");
+                return;
+            }
+            ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
+            selectedProductImage = canvas.toDataURL("image/jpeg", 0.72);
+            document.getElementById("productImage").value = "";
+            setProductImagePreview(selectedProductImage);
+        };
+        image.src = String(reader.result);
+    };
+    reader.readAsDataURL(file);
+}
 
 function togglePassword(id, button) {
     const input = document.getElementById(id);
@@ -805,13 +866,12 @@ async function api(url, options = {}) {
     }
 
     const response = await fetch(url, config);
-
+    const rawResponse = await response.text();
     let data;
-
     try {
-        data = await response.json();
+        data = rawResponse ? JSON.parse(rawResponse) : {};
     } catch {
-        data = { status: "error", message: await response.text() };
+        data = { status: "error", message: rawResponse || "Invalid server response" };
     }
 
     if (!response.ok) {
@@ -1467,11 +1527,17 @@ async function saveProduct() {
         category: document.getElementById("productCategory").value.trim(),
         price: Number(document.getElementById("productPrice").value),
         stock: Number(document.getElementById("productStock").value),
-        image_url: document.getElementById("productImage").value.trim()
+        image_url: selectedProductImage || document.getElementById("productImage").value.trim()
     };
 
-    if (!data.name || data.price < 0 || data.stock < 0) {
-        showMessage("Enter valid product details");
+    if (!data.name || !data.category || !Number.isFinite(data.price) || data.price <= 0 ||
+        !Number.isInteger(data.stock) || data.stock < 0) {
+        showMessage("Enter a name, category, positive price and valid stock quantity");
+        return;
+    }
+    if (data.image_url && !data.image_url.startsWith("data:image/") &&
+        !/^https?:\\/\\//i.test(data.image_url)) {
+        showMessage("Image URL must start with http:// or https://");
         return;
     }
 
@@ -1516,9 +1582,14 @@ function editProduct(product) {
     document.getElementById("productStock").value =
         product.stock;
 
+    selectedProductImage = (product.image_url || "").startsWith("data:image/")
+        ? product.image_url : "";
     document.getElementById("productImage").value =
-        product.image_url || "";
+        selectedProductImage ? "" : (product.image_url || "");
+    document.getElementById("productImageFile").value = "";
+    setProductImagePreview(product.image_url || "");
 
+    document.getElementById("productFormTitle").textContent = "Edit Product";
     document.getElementById("productSaveButton").textContent =
         "Update Product";
 
@@ -1548,6 +1619,10 @@ function clearProductForm() {
 
     document.getElementById("productSaveButton").textContent =
         "Add Product";
+    document.getElementById("productFormTitle").textContent = "Add Product";
+    selectedProductImage = "";
+    document.getElementById("productImageFile").value = "";
+    setProductImagePreview("");
 
     document.getElementById("cancelEditButton")
         .classList.add("hidden");
@@ -1647,6 +1722,15 @@ function escapeHtml(value) {
         .replaceAll('"', "&quot;")
         .replaceAll("'", "&#039;");
 }
+
+const productImageFileInput = document.getElementById("productImageFile");
+if (productImageFileInput) productImageFileInput.addEventListener("change", handleProductImageFile);
+const productImageUrlInput = document.getElementById("productImage");
+if (productImageUrlInput) productImageUrlInput.addEventListener("input", () => {
+    selectedProductImage = "";
+    document.getElementById("productImageFile").value = "";
+    setProductImagePreview(productImageUrlInput.value.trim());
+});
 
 checkLogin();
 </script>
