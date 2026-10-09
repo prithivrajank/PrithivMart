@@ -426,6 +426,42 @@ footer{
         gap:6px;
     }
 }
+
+.password-wrap{display:flex;gap:8px;align-items:stretch}
+.password-wrap input{flex:1;min-width:0}
+.password-toggle{flex:none;min-width:72px;background:#f8fafc;color:var(--primary);border:1px solid var(--border)}
+.password-toggle:hover{background:#edf2f7}
+.toolbar{display:flex;align-items:center;gap:14px;justify-content:space-between;margin:0 0 20px;flex-wrap:wrap}
+.toolbar>input{max-width:420px;flex:1}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{background:#fff;color:var(--primary);border:1px solid var(--border);border-radius:999px;padding:9px 15px}
+.chip.active,.chip:hover{background:var(--primary);color:#fff}
+.badge{display:inline-block;border-radius:999px;padding:5px 9px;background:#eef4fb;color:var(--primary);font-size:12px;font-weight:700}
+.product{display:flex;flex-direction:column;min-width:0;overflow:hidden}
+.product img{display:block;object-fit:cover;height:210px;margin:0 0 14px}
+.product h3{line-height:1.35;overflow-wrap:anywhere}
+.product .small{min-height:38px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.product .price{margin-top:auto;padding-top:10px}
+.product .seller{font-size:13px;color:var(--muted)}
+.product input[type=number]{margin-top:8px}
+.empty{grid-column:1/-1;text-align:center;padding:34px 18px;border:1px dashed var(--border);background:#fff;border-radius:14px;color:var(--muted)}
+.seller-product-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin-top:16px}
+.seller-product-card{background:#fff;border:1px solid var(--border);border-radius:14px;padding:14px;display:flex;flex-direction:column;gap:8px;min-width:0}
+.seller-product-card img{width:100%;height:160px;object-fit:cover;background:#f3f6fa;border-radius:10px}
+.seller-product-card h3{margin:4px 0;overflow-wrap:anywhere}
+.seller-product-card .actions{margin-top:auto}
+.seller-product-card .actions button{flex:1}
+.image-uploader{display:grid;grid-template-columns:150px minmax(0,1fr);gap:16px;align-items:center;margin:10px 0 14px;padding:14px;border:1px dashed #bdc9d8;border-radius:12px;background:#fafcff}
+.image-preview{width:150px;height:130px;object-fit:contain;background:#f0f4f8;border:1px solid var(--border);border-radius:10px}
+.image-tools{display:flex;flex-direction:column;gap:9px;min-width:0}
+.image-tools input[type=file]{padding:8px;background:white}
+.image-help{font-size:12px;color:var(--muted);line-height:1.5}
+.seller-form-title{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.seller-form-title h2{margin:0}
+input:disabled,button:disabled{opacity:.55;cursor:not-allowed;transform:none}
+@media(max-width:900px){.seller-product-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:650px){.seller-product-grid{grid-template-columns:1fr}.image-uploader{grid-template-columns:1fr}.image-preview{width:100%;height:180px}.toolbar>input{max-width:none;width:100%}.product img{height:220px}}
+
 </style>
 
 
@@ -542,7 +578,7 @@ footer{
         <input id="regName" placeholder="Enter name">
 
         <label>Email</label>
-        <input id="regEmail" type="email" placeholder="Enter Gmail address">
+        <input id="regEmail" type="email" placeholder="Enter email address">
 
         <label>Mobile Number</label>
         <input id="regMobile" type="tel" maxlength="10" inputmode="numeric" placeholder="Enter 10-digit mobile number">
@@ -1373,7 +1409,7 @@ async function showBuyerOrders() {
     }
 }
 
-async function showSellerDashboard() {
+async async function showSellerDashboard() {
     hideSections();
     document.getElementById("sellerSection").classList.remove("hidden");
     await loadSellerProducts();
