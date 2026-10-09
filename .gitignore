@@ -1,0 +1,11 @@
+# Local build output
+/build/
+/output/
+*.exe
+*.obj
+*.pdb
+
+# Local secrets and environment files
+.env
+.env.*
+!.env.example
