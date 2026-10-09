@@ -117,154 +117,90 @@ private:
         return size * nmemb;
     }
 
+    static size_t appendHttpResponse(char *ptr, size_t size, size_t nmemb, void *userdata)
+    {
+        auto *response = static_cast<std::string *>(userdata);
+        const size_t bytes = size * nmemb;
+        response->append(ptr, bytes);
+        return bytes;
+    }
+
     static bool sendOtpEmail(
         const std::string &toEmail,
         const std::string &otp,
         std::string &errorMessage)
     {
-        const char *senderEnv =
-            std::getenv("PRITHIVMART_EMAIL");
+        const char *senderEnv = std::getenv("PRITHIVMART_EMAIL");
+        const char *apiKeyEnv = std::getenv("PRITHIVMART_BREVO_API_KEY");
 
-        const char *appPasswordEnv =
-            std::getenv("PRITHIVMART_EMAIL_APP_PASSWORD");
-
-        if (!senderEnv || !appPasswordEnv)
+        if (!senderEnv || !*senderEnv || !apiKeyEnv || !*apiKeyEnv)
         {
             errorMessage =
-                "Gmail OTP is not configured. "
-                "Set PRITHIVMART_EMAIL and "
-                "PRITHIVMART_EMAIL_APP_PASSWORD.";
-
+                "Email service is not configured. Set PRITHIVMART_EMAIL "
+                "and PRITHIVMART_BREVO_API_KEY in Render.";
             return false;
         }
 
-        const std::string sender = senderEnv;
-        const std::string appPassword = appPasswordEnv;
+        Json::Value body;
+        body["sender"]["name"] = "PrithivMart";
+        body["sender"]["email"] = senderEnv;
+        body["to"] = Json::arrayValue;
+        body["to"][0]["email"] = toEmail;
+        body["subject"] = "PrithivMart Verification OTP";
+        body["textContent"] =
+            "Your PrithivMart verification OTP is: " + otp +
+            "\n\nThis OTP is valid for 5 minutes.\n"
+            "Do not share this OTP with anyone.";
 
-        std::ostringstream mail;
-
-        mail
-            << "To: " << toEmail << "\r\n"
-            << "From: PrithivMart <" << sender << ">\r\n"
-            << "Subject: PrithivMart Verification OTP\r\n"
-            << "MIME-Version: 1.0\r\n"
-            << "Content-Type: text/plain; charset=UTF-8\r\n"
-            << "\r\n"
-            << "Your PrithivMart verification OTP is: "
-            << otp << "\r\n\r\n"
-            << "This OTP is valid for 5 minutes.\r\n"
-            << "Do not share this OTP with anyone.\r\n";
-
-        UploadStatus upload;
-        upload.payload = mail.str();
+        Json::StreamWriterBuilder writer;
+        writer["indentation"] = "";
+        const std::string payload = Json::writeString(writer, body);
 
         CURL *curl = curl_easy_init();
-
         if (!curl)
         {
-            errorMessage =
-                "Unable to initialize Gmail service.";
-
+            errorMessage = "Unable to initialize email service.";
             return false;
         }
 
-        struct curl_slist *recipients = nullptr;
+        struct curl_slist *headers = nullptr;
+        const std::string apiHeader = std::string("api-key: ") + apiKeyEnv;
+        headers = curl_slist_append(headers, "accept: application/json");
+        headers = curl_slist_append(headers, "content-type: application/json");
+        headers = curl_slist_append(headers, apiHeader.c_str());
 
-        recipients =
-            curl_slist_append(
-                recipients,
-                toEmail.c_str()
-            );
+        std::string responseBody;
+        curl_easy_setopt(curl, CURLOPT_URL, "https://api.brevo.com/v3/smtp/email");
+        curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
+        curl_easy_setopt(curl, CURLOPT_POST, 1L);
+        curl_easy_setopt(curl, CURLOPT_POSTFIELDS, payload.c_str());
+        curl_easy_setopt(curl, CURLOPT_POSTFIELDSIZE, static_cast<long>(payload.size()));
+        curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, appendHttpResponse);
+        curl_easy_setopt(curl, CURLOPT_WRITEDATA, &responseBody);
+        curl_easy_setopt(curl, CURLOPT_CONNECTTIMEOUT, 10L);
+        curl_easy_setopt(curl, CURLOPT_TIMEOUT, 20L);
+        curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 1L);
+        curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 2L);
 
-        const std::string mailFrom =
-            "<" + sender + ">";
-
-        curl_easy_setopt(
-            curl,
-            CURLOPT_URL,
-            "smtps://smtp.gmail.com:465"
-        );
-
-        curl_easy_setopt(
-            curl,
-            CURLOPT_USERNAME,
-            sender.c_str()
-        );
-
-        curl_easy_setopt(
-            curl,
-            CURLOPT_PASSWORD,
-            appPassword.c_str()
-        );
-
-        curl_easy_setopt(
-            curl,
-            CURLOPT_MAIL_FROM,
-            mailFrom.c_str()
-        );
-
-        curl_easy_setopt(
-            curl,
-            CURLOPT_MAIL_RCPT,
-            recipients
-        );
-
-        curl_easy_setopt(
-            curl,
-            CURLOPT_READFUNCTION,
-            smtpReadCallback
-        );
-
-        curl_easy_setopt(
-            curl,
-            CURLOPT_READDATA,
-            &upload
-        );
-
-        curl_easy_setopt(
-            curl,
-            CURLOPT_UPLOAD,
-            1L
-        );
-
-        curl_easy_setopt(
-            curl,
-            CURLOPT_USE_SSL,
-            CURLUSESSL_ALL
-        );
-
-        curl_easy_setopt(
-            curl,
-            CURLOPT_SSL_VERIFYPEER,
-            1L
-        );
-
-        curl_easy_setopt(
-            curl,
-            CURLOPT_SSL_VERIFYHOST,
-            2L
-        );
-
-        curl_easy_setopt(
-            curl,
-            CURLOPT_TIMEOUT,
-            20L
-        );
-
-        CURLcode result =
-            curl_easy_perform(curl);
+        CURLcode result = curl_easy_perform(curl);
+        long httpCode = 0;
+        curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &httpCode);
 
         if (result != CURLE_OK)
         {
-            errorMessage =
-                std::string("OTP email failed: ") +
-                curl_easy_strerror(result);
+            errorMessage = std::string("OTP email request failed: ") +
+                           curl_easy_strerror(result);
+        }
+        else if (httpCode < 200 || httpCode >= 300)
+        {
+            // Keep API response out of the user-facing message; it may contain provider details.
+            errorMessage = "Email provider returned HTTP " + std::to_string(httpCode) +
+                           ". Check Brevo sender verification and account status.";
         }
 
-        curl_slist_free_all(recipients);
+        curl_slist_free_all(headers);
         curl_easy_cleanup(curl);
-
-        return result == CURLE_OK;
+        return result == CURLE_OK && httpCode >= 200 && httpCode < 300;
     }
 
     static bool sendLoginSms(
@@ -480,14 +416,14 @@ public:
             return jsonMessage("error", "Role must be BUYER or SELLER");
 
         const std::regex emailPattern(
-            R"(^[A-Za-z0-9._%+-]+@gmail\.com$)",
+            R"(^[A-Za-z0-9.!#$%&'*+/=?^_`{|}~-]+@[A-Za-z0-9-]+(\.[A-Za-z0-9-]+)+$)",
             std::regex::icase
         );
 
         if (!std::regex_match(email, emailPattern))
             return jsonMessage(
                 "error",
-                "Enter a valid Gmail address ending with @gmail.com"
+                "Enter a valid email address"
             );
 
         const std::regex mobilePattern(R"(^[6-9][0-9]{9}$)");
@@ -695,14 +631,14 @@ public:
                 "error",
                 emailError +
                 " Registration is saved but is not verified. "
-                "After configuring Gmail, use Resend OTP."
+                "Check email configuration and use Resend OTP."
             );
         }
 
         Json::Value response;
         response["status"] = "success";
         response["message"] =
-            "OTP sent to your Gmail. Verify it to activate your account.";
+            "OTP sent to your email. Verify it to activate your account.";
         response["verification_required"] = true;
         response["email"] = email;
         response["user_id"] = userId;
@@ -962,7 +898,7 @@ public:
 
         return jsonMessage(
             "success",
-            "A new OTP was sent to your Gmail."
+            "A new OTP was sent to your email."
         );
     }
 
