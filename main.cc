@@ -2825,7 +2825,7 @@ int main()
     {
         char *end = nullptr;
         long parsedPort = std::strtol(portEnv, &end, 10);
-        if (end != portEnv && *end == '\\0' && parsedPort > 0 && parsedPort <= 65535)
+        if (end != portEnv && *end == '\0' && parsedPort > 0 && parsedPort <= 65535)
         {
             port = static_cast<int>(parsedPort);
         }
