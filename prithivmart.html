@@ -1405,7 +1405,7 @@ function renderProducts(products) {
             <p class="price">₹${Number(product.price).toFixed(2)}</p>
             <p class="stock">${product.stock > 0 ? `In Stock: ${product.stock}` : "Out of Stock"}</p>
             <p class="seller">Seller: ${escapeHtml(product.seller || "-")}</p>
-            <button class="password-toggle" onclick="showProductReviews(${product.id}, '${escapeHtml(product.name).replaceAll("'", "\\'")}')">Reviews & ratings</button>
+            <button class="password-toggle" onclick="showProductReviews(${product.id})">Reviews & ratings</button>
 
             ${
                 currentUser && currentUser.role === "BUYER"
@@ -1855,8 +1855,10 @@ async function updateOrderStatus(orderId) {
 
 let activeReviewProductId = 0;
 
-async function showProductReviews(productId, productName) {
+async function showProductReviews(productId) {
     activeReviewProductId = Number(productId);
+    const selectedProduct = allProducts.find(p => Number(p.id) === activeReviewProductId);
+    const productName = selectedProduct ? selectedProduct.name : ("Product #" + activeReviewProductId);
     hideSections();
     document.getElementById("reviewsSection").classList.remove("hidden");
     document.getElementById("reviewsProductTitle").textContent = "Reviews: " + productName;
@@ -1896,7 +1898,7 @@ async function submitProductReview() {
         });
         showMessage(data.message || "Review saved");
         document.getElementById("reviewComment").value = "";
-        await showProductReviews(activeReviewProductId, document.getElementById("reviewsProductTitle").textContent.replace(/^Reviews: /, ""));
+        await showProductReviews(activeReviewProductId);
     } catch (error) {
         showMessage(error.message);
     }
