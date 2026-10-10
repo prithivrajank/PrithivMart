@@ -2832,7 +2832,7 @@ int main()
                 resp->setBody(Database::addProductReview(productId,buyerId,(*json)["rating"].asInt(),(*json)["comment"].asString()));
                 callback(resp);return;
             }
-            callback(jsonError(k405MethodNotAllowed,"Method not allowed"));
+            callback(jsonError(k400BadRequest,"Unsupported review request"));
         }, {Get,Post});
 
     // ---------------------------------------------------------
