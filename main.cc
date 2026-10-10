@@ -2816,6 +2816,49 @@ int main()
         {Put}
     );
 
+
+    // ---------------------------------------------------------
+    // PRODUCT REVIEWS (buyers may review only products they ordered)
+    // ---------------------------------------------------------
+    app().registerHandler("/products/{1}/reviews",
+        [](const HttpRequestPtr &req, std::function<void(const HttpResponsePtr &)> &&callback, int productId)
+        {
+            auto resp=HttpResponse::newHttpResponse();resp->setContentTypeCode(CT_APPLICATION_JSON);
+            if(req->method()==Get){resp->setBody(Database::getProductReviews(productId));callback(resp);return;}
+            if(req->method()==Post){
+                if(!hasRole(req,"BUYER")){callback(jsonError(k403Forbidden,"Buyer login required to review products"));return;}
+                auto json=req->getJsonObject();if(!json){callback(jsonError(k400BadRequest,"Invalid JSON"));return;}
+                int buyerId=req->session()->get<int>("user_id");
+                resp->setBody(Database::addProductReview(productId,buyerId,(*json)["rating"].asInt(),(*json)["comment"].asString()));
+                callback(resp);return;
+            }
+            callback(jsonError(k405MethodNotAllowed,"Method not allowed"));
+        }, {Get,Post});
+
+    // ---------------------------------------------------------
+    // ADMIN APIs
+    // ---------------------------------------------------------
+    app().registerHandler("/admin/users",
+        [](const HttpRequestPtr &req,std::function<void(const HttpResponsePtr &)> &&callback)
+        {
+            if(!hasRole(req,"ADMIN")){callback(jsonError(k403Forbidden,"Admin access only"));return;}
+            auto resp=HttpResponse::newHttpResponse();resp->setContentTypeCode(CT_APPLICATION_JSON);resp->setBody(Database::adminUsers());callback(resp);
+        }, {Get});
+
+    app().registerHandler("/admin/orders",
+        [](const HttpRequestPtr &req,std::function<void(const HttpResponsePtr &)> &&callback)
+        {
+            if(!hasRole(req,"ADMIN")){callback(jsonError(k403Forbidden,"Admin access only"));return;}
+            auto resp=HttpResponse::newHttpResponse();resp->setContentTypeCode(CT_APPLICATION_JSON);resp->setBody(Database::adminOrders());callback(resp);
+        }, {Get});
+
+    app().registerHandler("/admin/products/{1}",
+        [](const HttpRequestPtr &req,std::function<void(const HttpResponsePtr &)> &&callback,int productId)
+        {
+            if(!hasRole(req,"ADMIN")){callback(jsonError(k403Forbidden,"Admin access only"));return;}
+            auto resp=HttpResponse::newHttpResponse();resp->setContentTypeCode(CT_APPLICATION_JSON);resp->setBody(Database::adminDeleteProduct(productId));callback(resp);
+        }, {Delete});
+
     // ---------------------------------------------------------
     // AI HELP CHATBOT (Gemini API; API key stays on the server)
     // ---------------------------------------------------------
