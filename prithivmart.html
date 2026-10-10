@@ -558,6 +558,11 @@ td,th{padding:13px}
         <button onclick="showSellerOrders()">Orders</button>
         <button onclick="logout()">Logout</button>
     </nav>
+
+    <nav id="adminNav" class="hidden">
+        <button onclick="showAdminDashboard()">Admin Panel</button>
+        <button onclick="logout()">Logout</button>
+    </nav>
 </header>
 
 <div class="container">
@@ -804,6 +809,41 @@ td,th{padding:13px}
         <div id="sellerOrders"></div>
     </section>
 
+    <!-- PRODUCT REVIEWS -->
+    <section id="reviewsSection" class="hidden">
+        <div class="card">
+            <button class="password-toggle" onclick="showProducts()">← Back to products</button>
+            <h2 id="reviewsProductTitle">Product reviews</h2>
+            <div id="reviewsList"></div>
+            <div id="reviewForm" class="hidden">
+                <h3>Write a review</h3>
+                <label>Rating</label>
+                <select id="reviewRating"><option value="5">5 - Excellent</option><option value="4">4 - Good</option><option value="3">3 - Average</option><option value="2">2 - Poor</option><option value="1">1 - Bad</option></select>
+                <label>Comment</label>
+                <textarea id="reviewComment" maxlength="1000" placeholder="Share your experience after ordering this product"></textarea>
+                <button onclick="submitProductReview()">Submit review</button>
+            </div>
+            <p class="small">Only buyers who have ordered this product can submit a review.</p>
+        </div>
+    </section>
+
+    <!-- ADMIN PANEL -->
+    <section id="adminSection" class="hidden">
+        <h2>Admin Panel</h2>
+        <div class="card">
+            <h3>All users</h3>
+            <div id="adminUsers"><p>Loading users…</p></div>
+        </div>
+        <div class="card">
+            <h3>All orders</h3>
+            <div id="adminOrders"><p>Loading orders…</p></div>
+        </div>
+        <div class="card">
+            <h3>Product moderation</h3>
+            <div id="adminProducts"><p>Loading products…</p></div>
+        </div>
+    </section>
+
 </div>
 
 <footer>© 2026 PrithivMart · Shopping made simpler, every day.</footer>
@@ -913,7 +953,9 @@ function hideSections() {
         "cartSection",
         "buyerOrdersSection",
         "sellerSection",
-        "sellerOrdersSection"
+        "sellerOrdersSection",
+        "reviewsSection",
+        "adminSection"
     ].forEach(id => {
         document.getElementById(id).classList.add("hidden");
     });
@@ -932,6 +974,7 @@ function updateNav() {
     document.getElementById("guestNav").classList.add("hidden");
     document.getElementById("buyerNav").classList.add("hidden");
     document.getElementById("sellerNav").classList.add("hidden");
+    document.getElementById("adminNav").classList.add("hidden");
 
     if (!currentUser) {
         document.getElementById("guestNav").classList.remove("hidden");
@@ -944,6 +987,9 @@ function updateNav() {
 
     if (currentUser.role === "SELLER") {
         document.getElementById("sellerNav").classList.remove("hidden");
+    }
+    if (currentUser.role === "ADMIN") {
+        document.getElementById("adminNav").classList.remove("hidden");
     }
 }
 
@@ -984,6 +1030,8 @@ async function checkLogin() {
             showProducts();
         } else if (currentUser.role === "SELLER") {
             showSellerDashboard();
+        } else if (currentUser.role === "ADMIN") {
+            showAdminDashboard();
         }
     } catch {
         currentUser = null;
@@ -1270,6 +1318,8 @@ async function login() {
             showProducts();
         } else if (data.role === "SELLER") {
             showSellerDashboard();
+        } else if (data.role === "ADMIN") {
+            showAdminDashboard();
         }
     } catch (error) {
         showMessage(error.message);
@@ -1355,6 +1405,7 @@ function renderProducts(products) {
             <p class="price">₹${Number(product.price).toFixed(2)}</p>
             <p class="stock">${product.stock > 0 ? `In Stock: ${product.stock}` : "Out of Stock"}</p>
             <p class="seller">Seller: ${escapeHtml(product.seller || "-")}</p>
+            <button class="password-toggle" onclick="showProductReviews(${product.id}, '${escapeHtml(product.name).replaceAll("'", "\\'")}')">Reviews & ratings</button>
 
             ${
                 currentUser && currentUser.role === "BUYER"
@@ -1796,6 +1847,92 @@ async function updateOrderStatus(orderId) {
 
         showMessage(data.message);
         showSellerOrders();
+    } catch (error) {
+        showMessage(error.message);
+    }
+}
+
+
+let activeReviewProductId = 0;
+
+async function showProductReviews(productId, productName) {
+    activeReviewProductId = Number(productId);
+    hideSections();
+    document.getElementById("reviewsSection").classList.remove("hidden");
+    document.getElementById("reviewsProductTitle").textContent = "Reviews: " + productName;
+    document.getElementById("reviewsList").innerHTML = "<p>Loading reviews…</p>";
+    document.getElementById("reviewForm").classList.toggle("hidden", !currentUser || currentUser.role !== "BUYER");
+    try {
+        const reviews = await api("/products/" + activeReviewProductId + "/reviews");
+        const box = document.getElementById("reviewsList");
+        if (!Array.isArray(reviews) || reviews.length === 0) {
+            box.innerHTML = "<p>No reviews yet. Be the first to review after ordering.</p>";
+            return;
+        }
+        box.innerHTML = reviews.map(r => `
+            <article class="card">
+                <strong>${escapeHtml(r.buyer || "Buyer")}</strong>
+                <span aria-label="rating">${"★".repeat(Number(r.rating))}${"☆".repeat(5-Number(r.rating))}</span>
+                <p>${escapeHtml(r.comment || "")}</p>
+                <p class="small">${escapeHtml(r.created_at || "")}</p>
+            </article>`).join("");
+    } catch (error) {
+        document.getElementById("reviewsList").textContent = error.message;
+    }
+}
+
+async function submitProductReview() {
+    if (!currentUser || currentUser.role !== "BUYER") {
+        showMessage("Please log in as a buyer");
+        return;
+    }
+    try {
+        const data = await api("/products/" + activeReviewProductId + "/reviews", {
+            method: "POST",
+            body: {
+                rating: Number(document.getElementById("reviewRating").value),
+                comment: document.getElementById("reviewComment").value.trim()
+            }
+        });
+        showMessage(data.message || "Review saved");
+        document.getElementById("reviewComment").value = "";
+        await showProductReviews(activeReviewProductId, document.getElementById("reviewsProductTitle").textContent.replace(/^Reviews: /, ""));
+    } catch (error) {
+        showMessage(error.message);
+    }
+}
+
+async function showAdminDashboard() {
+    if (!currentUser || currentUser.role !== "ADMIN") {
+        showMessage("Admin access only");
+        return;
+    }
+    hideSections();
+    document.getElementById("adminSection").classList.remove("hidden");
+    try {
+        const [users, orders, products] = await Promise.all([
+            api("/admin/users"), api("/admin/orders"), api("/products")
+        ]);
+        document.getElementById("adminUsers").innerHTML = Array.isArray(users) && users.length
+            ? `<div class="table-wrap"><table><tr><th>ID</th><th>Name</th><th>Email</th><th>Mobile</th><th>Role</th><th>Verified</th></tr>${users.map(u => `<tr><td>${u.id}</td><td>${escapeHtml(u.name)}</td><td>${escapeHtml(u.email)}</td><td>${escapeHtml(u.mobile)}</td><td>${escapeHtml(u.role)}</td><td>${u.verified ? "Yes" : "No"}</td></tr>`).join("")}</table></div>`
+            : "<p>No users found.</p>";
+        document.getElementById("adminOrders").innerHTML = Array.isArray(orders) && orders.length
+            ? `<div class="table-wrap"><table><tr><th>Order</th><th>Buyer</th><th>Email</th><th>Total</th><th>Status</th><th>Created</th></tr>${orders.map(o => `<tr><td>${o.order_id}</td><td>${escapeHtml(o.buyer)}</td><td>${escapeHtml(o.email)}</td><td>₹${Number(o.total).toFixed(2)}</td><td>${escapeHtml(o.status)}</td><td>${escapeHtml(o.created_at)}</td></tr>`).join("")}</table></div>`
+            : "<p>No orders found.</p>";
+        document.getElementById("adminProducts").innerHTML = Array.isArray(products) && products.length
+            ? `<div class="table-wrap"><table><tr><th>ID</th><th>Product</th><th>Seller</th><th>Price</th><th>Stock</th><th>Action</th></tr>${products.map(p => `<tr><td>${p.id}</td><td>${escapeHtml(p.name)}</td><td>${escapeHtml(p.seller)}</td><td>₹${Number(p.price).toFixed(2)}</td><td>${p.stock}</td><td><button onclick="adminRemoveProduct(${p.id})">Remove</button></td></tr>`).join("")}</table></div>`
+            : "<p>No products found.</p>";
+    } catch (error) {
+        showMessage("Admin panel could not load: " + error.message);
+    }
+}
+
+async function adminRemoveProduct(productId) {
+    if (!confirm("Remove this product? This action cannot be undone.")) return;
+    try {
+        const result = await api("/admin/products/" + productId, { method: "DELETE" });
+        showMessage(result.message || "Product removed");
+        await showAdminDashboard();
     } catch (error) {
         showMessage(error.message);
     }
