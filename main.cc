@@ -2007,6 +2007,77 @@ public:
 
         return jsonMessage("success", "Order Status Updated");
     }
+
+    // Admin management APIs
+    static std::string adminUsers()
+    {
+        PGconn *conn = connect();
+        if (!connectionOk(conn)) { std::string e=conn?PQerrorMessage(conn):"Database connection failed"; if(conn) PQfinish(conn); return jsonMessage("error",e); }
+        PGresult *r=PQexec(conn,"SELECT id,name,email,COALESCE(mobile,''),role,is_verified FROM users ORDER BY id DESC");
+        if(PQresultStatus(r)!=PGRES_TUPLES_OK){std::string e=PQerrorMessage(conn);PQclear(r);PQfinish(conn);return jsonMessage("error",e);}
+        Json::Value rows(Json::arrayValue);
+        for(int i=0;i<PQntuples(r);++i){Json::Value x;x["id"]=std::stoi(PQgetvalue(r,i,0));x["name"]=PQgetvalue(r,i,1);x["email"]=PQgetvalue(r,i,2);x["mobile"]=PQgetvalue(r,i,3);x["role"]=PQgetvalue(r,i,4);x["verified"]=std::string(PQgetvalue(r,i,5))=="t";rows.append(x);}
+        PQclear(r);PQfinish(conn);Json::StreamWriterBuilder w;return Json::writeString(w,rows);
+    }
+
+    static std::string adminOrders()
+    {
+        PGconn *conn=connect();
+        if(!connectionOk(conn)){std::string e=conn?PQerrorMessage(conn):"Database connection failed";if(conn)PQfinish(conn);return jsonMessage("error",e);}
+        PGresult *r=PQexec(conn,"SELECT o.id,COALESCE(u.name,''),COALESCE(u.email,''),o.total_amount,o.status,o.created_at FROM orders o LEFT JOIN users u ON u.id=o.buyer_id ORDER BY o.id DESC");
+        if(PQresultStatus(r)!=PGRES_TUPLES_OK){std::string e=PQerrorMessage(conn);PQclear(r);PQfinish(conn);return jsonMessage("error",e);}
+        Json::Value rows(Json::arrayValue);
+        for(int i=0;i<PQntuples(r);++i){Json::Value x;x["order_id"]=std::stoi(PQgetvalue(r,i,0));x["buyer"]=PQgetvalue(r,i,1);x["email"]=PQgetvalue(r,i,2);x["total"]=std::stod(PQgetvalue(r,i,3));x["status"]=PQgetvalue(r,i,4);x["created_at"]=PQgetvalue(r,i,5);rows.append(x);}
+        PQclear(r);PQfinish(conn);Json::StreamWriterBuilder w;return Json::writeString(w,rows);
+    }
+
+    static std::string adminDeleteProduct(int productId)
+    {
+        PGconn *conn=connect();
+        if(!connectionOk(conn)){std::string e=conn?PQerrorMessage(conn):"Database connection failed";if(conn)PQfinish(conn);return jsonMessage("error",e);}
+        std::string id=std::to_string(productId);const char *v[1]={id.c_str()};
+        PGresult *r=PQexecParams(conn,"DELETE FROM products WHERE id=$1::int",1,nullptr,v,nullptr,nullptr,0);
+        if(PQresultStatus(r)!=PGRES_COMMAND_OK){PQclear(r);PQfinish(conn);return jsonMessage("error","Could not remove product. It may be linked to an existing order.");}
+        int changed=std::atoi(PQcmdTuples(r));PQclear(r);PQfinish(conn);
+        if(!changed)return jsonMessage("error","Product not found");
+        return jsonMessage("success","Product removed");
+    }
+
+    static bool ensureReviewsTable(PGconn *conn)
+    {
+        PGresult *r=PQexec(conn,"CREATE TABLE IF NOT EXISTS product_reviews (id BIGSERIAL PRIMARY KEY, product_id INTEGER NOT NULL REFERENCES products(id) ON DELETE CASCADE, buyer_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE, rating INTEGER NOT NULL CHECK(rating BETWEEN 1 AND 5), comment TEXT NOT NULL DEFAULT '', created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP, UNIQUE(product_id,buyer_id))");
+        bool ok=r&&PQresultStatus(r)==PGRES_COMMAND_OK;if(r)PQclear(r);return ok;
+    }
+
+    static std::string getProductReviews(int productId)
+    {
+        PGconn *conn=connect();
+        if(!connectionOk(conn)){std::string e=conn?PQerrorMessage(conn):"Database connection failed";if(conn)PQfinish(conn);return jsonMessage("error",e);}
+        if(!ensureReviewsTable(conn)){PQfinish(conn);return jsonMessage("error","Could not initialize reviews table");}
+        std::string id=std::to_string(productId);const char *v[1]={id.c_str()};
+        PGresult *r=PQexecParams(conn,"SELECT r.id,r.rating,r.comment,r.created_at,u.name FROM product_reviews r JOIN users u ON u.id=r.buyer_id WHERE r.product_id=$1::int ORDER BY r.id DESC",1,nullptr,v,nullptr,nullptr,0);
+        if(PQresultStatus(r)!=PGRES_TUPLES_OK){std::string e=PQerrorMessage(conn);PQclear(r);PQfinish(conn);return jsonMessage("error",e);}
+        Json::Value rows(Json::arrayValue);
+        for(int i=0;i<PQntuples(r);++i){Json::Value x;x["id"]=std::stoi(PQgetvalue(r,i,0));x["rating"]=std::stoi(PQgetvalue(r,i,1));x["comment"]=PQgetvalue(r,i,2);x["created_at"]=PQgetvalue(r,i,3);x["buyer"]=PQgetvalue(r,i,4);rows.append(x);}
+        PQclear(r);PQfinish(conn);Json::StreamWriterBuilder w;return Json::writeString(w,rows);
+    }
+
+    static std::string addProductReview(int productId,int buyerId,int rating,const std::string &comment)
+    {
+        if(rating<1||rating>5)return jsonMessage("error","Rating must be between 1 and 5");
+        if(comment.size()>1000)return jsonMessage("error","Review comment must be 1000 characters or fewer");
+        PGconn *conn=connect();
+        if(!connectionOk(conn)){std::string e=conn?PQerrorMessage(conn):"Database connection failed";if(conn)PQfinish(conn);return jsonMessage("error",e);}
+        if(!ensureReviewsTable(conn)){PQfinish(conn);return jsonMessage("error","Could not initialize reviews table");}
+        std::string product=std::to_string(productId),buyer=std::to_string(buyerId),ratingText=std::to_string(rating);
+        const char *v[4]={product.c_str(),buyer.c_str(),ratingText.c_str(),comment.c_str()};
+        PGresult *r=PQexecParams(conn,"INSERT INTO product_reviews(product_id,buyer_id,rating,comment) SELECT $1::int,$2::int,$3::int,$4 WHERE EXISTS (SELECT 1 FROM orders o JOIN order_items oi ON oi.order_id=o.id WHERE o.buyer_id=$2::int AND oi.product_id=$1::int) ON CONFLICT(product_id,buyer_id) DO UPDATE SET rating=EXCLUDED.rating,comment=EXCLUDED.comment RETURNING id",4,nullptr,v,nullptr,nullptr,0);
+        if(PQresultStatus(r)!=PGRES_TUPLES_OK){PQclear(r);PQfinish(conn);return jsonMessage("error","Could not save review");}
+        bool saved=PQntuples(r)>0;PQclear(r);PQfinish(conn);
+        if(!saved)return jsonMessage("error","You can review a product only after ordering it");
+        return jsonMessage("success","Review saved");
+    }
+
 };
 
 // =============================================================
